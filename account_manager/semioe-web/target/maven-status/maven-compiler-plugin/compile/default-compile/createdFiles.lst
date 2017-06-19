@@ -1,0 +1,4 @@
+com\semioe\web\Interceptor\AutorizadorInterceptor.class
+com\semioe\web\controller\ManagerController.class
+com\semioe\web\service\TokenService.class
+com\semioe\web\controller\DemoController.class

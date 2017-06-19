@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+	<!-- java -jar ../docs/mybatis-generator-core-1.3.2.jar -configfile generatorConfig.xml -tables xxxxx,xxxxxx -->
+	<!-- JDBC驱动地址 -->
+	<classPathEntry
+		location="F:/semio/account_manager/semioe-api/mysql-connector-java-5.1.26-bin.jar" />
+
+
+	<context id="mysqlTables" targetRuntime="MyBatis3">
+		<plugin type="org.mybatis.generator.plugins.EqualsHashCodePlugin"></plugin>
+		<plugin type="org.mybatis.generator.plugins.ToStringPlugin"></plugin>
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+		</commentGenerator>
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://119.23.76.107:3306/account_manager?characterEncoding=UTF-8"
+			userId="root" password="semioe17busy&amp;"
+		/>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<!-- 生成模型的包名和位置 -->
+		<javaModelGenerator targetPackage="com.semioe.api.entity" 
+			targetProject="semioe-api/src/main/java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		<!-- 生成的映射文件包名和位置 -->
+		<sqlMapGenerator targetPackage="mappers"
+			targetProject="semioe-service/src/main/resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+		<!-- 生成xml的包名和位置 -->
+		<javaClientGenerator type="XMLMAPPER" 
+			targetPackage="com.semioe.dubbo.dao"
+			targetProject="semioe-service/src/main/java">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+
+		<!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
+		<table tableName="handle_log" domainObjectName="HandleLog" >
+			<generatedKey column="id" sqlStatement="mysql" identity="true" />
+		</table>
+		
+		<table tableName="manager_info" domainObjectName="ManagerInfo" >
+			<generatedKey column="id" sqlStatement="mysql" identity="true" />
+		</table>
+		
+		<table tableName="user_message" domainObjectName="UserMessage" >
+			<generatedKey column="id" sqlStatement="mysql" identity="true" />
+		</table>
+
+	</context>
+</generatorConfiguration>
