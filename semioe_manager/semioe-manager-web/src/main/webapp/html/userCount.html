@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>签约用户统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main"  style="width: auto">
+<div class="layui-form">
+	<div class="layui-tab layui-tab-brief " lay-filter="docDemoTabBrief" >
+	<div class="layui-tab-content">
+		<div class="layui-form-item  my-tab-select">
+	    	<ul>
+	           <li>
+	               <label for="deviceName">开始时间:</label>
+	               <input type="text" name="date" id="beginTime" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})">
+	           </li>
+	           <li>
+	               <label for="vender">结束时间:</label>
+	               <input type="text" name="date" id="overTime" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})">
+	           </li>
+	       </ul>
+	       <p>
+	           <button class="layui-btn" id="userSearch">搜索</button>
+	       </p>
+		</div>
+		<div class="layui-tab layui-tab-brief layui-user">
+			<ul class="layui-tab-title userTab" style="border-bottom: none;text-align: center;">
+		        <li class="layui-this" type="0"><h2>性别</h2></li>
+		        <li type="1"><h2>疾病史</h2></li>
+		        <li type="2"><h2>年龄</h2></li>
+			</ul>
+	       	<div class="layui-tab-content">
+		       	<!-- 性别 -->
+		       	<div class="layui-tab-item layui-show">
+		       		<div id="first-container"></div>
+		       	</div>
+		       	
+		       	<div class="layui-tab-item">
+		       		<div id="second-container"></div>
+		       	</div>
+		       	<!-- 年龄 -->
+		       	<div class="layui-tab-item" >
+		       		<div id="third-container"></div>
+		       	</div>
+	       	</div>
+		</div>
+</div>
+</div>
+</div>
+</div>
+<script src="../js/jquery-2.1.1.min.js" charset="utf-8"></script>
+<script src="../js/jquery-json.js" charset="utf-8"></script>
+<script src="/js/tool.js"></script>
+<script src="../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/highcharts.js"></script>
+<script src="../js/userCount.js" charset="utf-8"></script>
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>万物语联</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="css/index.css"/>
+	<link rel="stylesheet" href="layui/css/layui.css"/>
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+ 	<script type="text/javascript">
+ 	window.onload = function(){
+ 		function myBrowser(){
+	 	    var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串
+	 	    var isOpera = userAgent.indexOf("Opera") > -1;
+	 	    if (userAgent.indexOf("Chrome") > -1){
+		 	  	return "Chrome";
+	 	 	}
+	 	}
+	 	var mb = myBrowser();
+	 	if ("Chrome" == mb) {
+	 	    document.getElementById("brower").remove();
+	 	}
+ 	}
+	</script>
+</head>
+<body>
+	
+	<!-- Video Markup -->
+	<div class="covervid-wrapper">
+		<video class="covervid-video" autoplay loop>
+			<source src="videos/clouds.mp4" type="video/mp4">
+			<source src="http://elegantthemes.com/preview/Divi/wp-content/uploads/2014/04/homepage-slider-bg.webm" type="video/webm">
+		</video>
+		<div class="fd">
+			semioe <span style="font-family:'微软雅黑'; font-weight:bold;">万物语联</span>
+			<p>Look for less,do more.</p>
+		</div>
+	</div>
+	<div class="loginBox" id="loginBox">
+		<table>
+			<tr>
+				<td>login</td>
+			</tr>
+			<tr>
+				<td><input type="text" id="login_username" placeholder="用户名"/></td>
+			</tr>
+			<tr>
+				<td><input type="password" id="login_password" placeholder="密码"/></td>
+			</tr>
+			<tr>
+				<td>
+					<button class="login btn" id="login">登录</button>
+					<button class="register btn" id="register">注册</button>
+				</td>
+			</tr>
+			<tr>
+				<td><a href="#" style="color: #b3b3cc;float: right;" id="lostPassword">忘记密码?</a></td>
+			</tr>
+			<tr id="brower">
+				<td><p style="color:rgba(250,255,189, .7);margin-top: 10px;text-align: center;" id="lostPassword">为保证良好的系统体验，请使用谷歌浏览器。</p></td>
+			</tr>
+		</table>
+	</div>
+	<div class="loginBox" id="retrievePassword">
+		<table>
+			<tr>
+				<td>密码找回</td>
+			</tr>
+			<tr>
+				<td><input type="text" id="password_name" placeholder="用户名"/></td>
+			</tr>
+			<tr>
+				<td><input type="text" id="randCode" placeholder="手机验证码"/></td>
+			</tr>
+			<tr>
+				<td><input type="password" id="set_password" placeholder="设置密码"/></td>
+			</tr>
+			<tr>
+				<td>
+					<button onclick="getPhoneCode(1)" class="cellphoneCode btn">获取验证码</button>
+					<button id="getPassword" class="register btn">确定</button>
+				</td>
+			</tr>
+		</table>
+		<a href="javascript:window.location.reload();" style="color: #f1f1f1;float: right;">返回登陆</a>
+	</div>
+	<div class="loginBox" id="registerBox">
+		<table>
+			<tr>
+				<td>用户注册</td>
+			</tr>
+			<tr>
+				<td><input type="text" id="username" placeholder="手机号"/></td>
+			</tr>
+			<tr>
+				<td><input type="password" id="password" placeholder="密码"/></td>
+			</tr>
+			<tr>
+				<td><input type="password" id="confirmPassword" placeholder="确认密码"/></td>
+			</tr>
+			<tr>
+				<td><input type="text" id="cellphoneCode" placeholder="手机验证码"/></td>
+			</tr>
+			<tr>
+				<td><input type="checkBox" id="agreement" checked="" style="margin-bottom: 15px;"/>
+					<span style="color: #f1f1f1;">阅读并接受<a href="/html/agreement.html" target="_blank" class="argeement_a">《万物语联医生用户服务协议》</a></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<button id="cellphoneCode" onclick="getPhoneCode(2)" class="cellphoneCode btn">获取验证码</button>
+					<button id="confirm_register" class="register btn">确定</button>
+				</td>
+			</tr>
+		</table>
+		<a href="javascript:window.location.reload();" style="color: #f1f1f1;float: right;">返回登陆</a>
+	</div>
+	<!-- Load Scripts -->
+	<script src="js/jquery-2.1.1.min.js"></script>
+	<script src="js/jquery-json.js"></script>
+	<script src="layui/layui.js" charset="utf-8"></script>
+	<script src="js/covervid.js"></script>
+	<script src="js/tool.js"></script>
+	<script src="js/index.js"></script>
+	<script type="text/javascript">
+		/* Call CoverVid */
+	    $('.covervid-video').coverVid(1920, 1080);
+	    /*获取手机验证码*/
+	    function getPhoneCode(str){//1为找回密码2为注册
+	    	if(str == 1){
+	    		var password_name = $("#password_name").val();
+		    	var regMobile = /^1[0-9]{10}$/;
+		    	if(!regMobile.test(password_name)){
+					layer.msg("请填写正确格式的手机号！");
+					return ;
+				}
+		    	if(!password_name){
+		    		layer.msg("用户名不能为空");
+					return ;
+		    	}
+		    	$.ajax({
+		            url:'/user/passwrod/randCode?mobile='+password_name,
+		            type:'POST',
+		            success : function(data){
+	            		return layer.msg(data.resultCode.message);
+		            },
+		            error : function(data){
+		            	layer.msg('手机验证码发送失败！');
+		            }
+		    	});
+	    	}else{
+	    		var username = $("#username").val();
+	    		var regMobile = /^1[0-9]{10}$/;
+		    	if(!regMobile.test(username)){
+					layer.msg("请填写正确格式的手机号！");
+					return ;
+				}
+		    	if(!username){
+		    		layer.msg("用户名不能为空！");
+		    	}
+		    	$.ajax({
+		            url:'/user/randCode?mobile='+username,
+		            type:'POST',
+		            success : function(data){
+	            		return layer.msg(data.resultCode.message);
+		            },
+		            error : function(data){
+		            	layer.msg('手机验证码发送失败！');
+		            }
+		    	});
+	    	}
+	    	
+	    }
+	</script>
+</body>
+</html>
+

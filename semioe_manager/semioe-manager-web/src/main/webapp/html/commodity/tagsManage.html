@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>标签管理</title>
+		<link rel="stylesheet" href="/layui/css/layui.css">
+		<style>
+			#form_add,#form_update{
+				display: none;
+				padding:30px;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="layui-form">
+			<div class="layui-form-item">
+				<div style="display:inline-block;width:50%;">
+					<label class="layui-form-label">商品标签</label>
+				    <div class="layui-input-block" >
+				      	<input type="text" id="tagName" name="tagName" placeholder="请输入标签名" autocomplete="off" class="layui-input" style="display: inline-block;"/>
+				    </div>
+				</div>
+				<div style="display:inline-block;width:49%;text-align: center;">
+					<button id="search-query" class="layui-btn search-query" style="float: left;">搜 索</button>
+					<button class="layui-btn add-node" >添加新标签</button>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form">
+			<table class="layui-table" lay-even>
+				<colgroup>
+					<col width="100">
+					<col >
+					<col width="200">
+					<col width="100">
+					<col width="200">
+				</colgroup>
+				<thead>
+					<tr>
+						<th>编号</th>
+						<th>商品标签</th>
+						<th>创建时间</th>
+						<th>是否可用</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="tagsBody">
+					<tr>
+						<td colspan="5" style="text-align:center;">加载中...</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="pageTag" style="text-align:center;"></div>
+	</body>
+	<form id="form_add" class="layui-form" onsubmit="javascript:return false;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品标签</label>
+			<div class="layui-input-block">
+				<input type="text" name="name" required lay-verify="required" placeholder="请输入标签名称，最长6个字符" autocomplete="off" class="layui-input" maxLength='6'/>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit lay-filter="addform">立即添加</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</div>
+	</form>
+	<form id="form_update" class="layui-form" onsubmit="javascript:return false;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品标签</label>
+			<div class="layui-input-block">
+				<input type="text" name="name" required lay-verify="required" placeholder="请输入标签名称，最长6个字符" autocomplete="off" class="layui-input" maxLength='6'/>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">是否可用</label>
+			<div class="layui-input-block">
+				<input type="radio" name="isUse" value="1" title="是" />
+      			<input type="radio" name="isUse" value="0" title="否" />
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-submit lay-filter="updateform">立即修改</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</div>
+	</form>	
+	<script src="/js/tool.js"></script>
+	<script src="/layui/layui.js"></script>
+	<script src="/js/commodity/tagsManage.js" charset="utf-8"></script>
+</html>
+

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>创建服务</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <style type="text/css">
+    	#goods_img{margin: 10px 0;}
+    	#goods_img img{margin-right: 10px;height: 80px;width: 80px;}
+    	.imgBox, #upload{
+	    	width: 100px;
+		    height: 100px;
+		    overflow: hidden;
+    	}
+    	.imgBox{
+			position:relative;
+		    background: url(../../image/uploadIcon.png) no-repeat center center;
+		    background-size: 60%;
+		    border:1px solid #ccc;
+		}
+		.imgBox,#upload{
+			width:100px;
+			height:100px;
+			overflow:hidden;
+		}
+		.imgBox img{
+			width:100%;
+			height:100%;
+		}
+		#upload{
+			position:absolute;
+			left:0;
+			top:0;
+			opacity:0;
+			filter=alpha(opacity=0);
+		}
+    </style>
+</head>
+<body>
+<div class="layui-form">
+	<input type="hidden" id="service_id" value=""/>
+	<div class="layui-form-item">
+        <label class="layui-form-label">选择工作流：<span>*</span></label>
+        <div class="layui-input-block">
+            <select name="city" id="procedureId">
+            	<option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务名称：<span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="serviceName" placeholder="请输入服务名称" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务属性：<span>*</span></label>
+        <div class="layui-input-block">
+        	<select name="serviceNature" id="serviceAttribute">
+            	<option value="">请选择</option>
+            	<option value="1">公开购买</option>
+            	<option value="2">私人推荐</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务图片：<span>*</span></label>
+       	<div class="layui-input-block">
+		  	<div class="imgBox">
+		  		<img src="" alt="" />
+		  	</div>
+		  	<form id="uploadFile" ><input type="file" name="file" id="upload" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" /></form>
+		</div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务分类：<span>*</span></label>
+        <div class="layui-input-block">
+            <select name="city" id="serviceType">
+            	<option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">定价：<span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="price" placeholder="￥" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">绑定商品：</label>
+        <div class="layui-input-block">
+            <button class="layui-btn" id="checkGoods">选择商品</button>
+            <input type="hidden" id="goods_id" value="">
+            <div id="goods_img">
+            </div>
+        </div>
+    </div>
+    <!-- <div class="layui-form-item">
+        <label class="layui-form-label">服务标签：<span>*</span></label>
+        <div class="layui-input-block">
+            <button class="layui-btn" id="checkLabel">选择标签</button>
+         	<div class="labelBox" id="labelBox"></div>
+        </div>
+    </div> -->
+    <div class="layui-form-item">
+        <label class="layui-form-label">服务介绍：<span>*</span></label>
+        <div class="layui-input-block">
+            <textarea id="serviceDesc" placeholder="请输入服务介绍" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="sercer_submit">立即提交</button>
+        </div>
+    </div>
+</div>
+
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script src="../../js/jquery-json.js"></script>
+<script src="../../js/base.js" charset="utf-8"></script>
+<script src="../../js/tool.js" charset="utf-8"></script>
+<script src="../../js/console/addService.js" charset="utf-8"></script>
+<script>
+    layui.use(['element', 'form', 'layer', 'jquery'], function(){
+    	var $ = layui.jquery,form = layui.form(),element = layui.element();
+		var layer = layui.layer;
+		//流程select加载数据
+		var token = window.utils.getCookie('token');
+		var managerId = window.utils.getCookie('managerId');
+		var roleId = window.utils.getCookie('roleId');
+		$.ajax({
+	    	url:'/procedures/getProceduresByToken?title=&token='+token,
+	        type:'POST',
+	        async: false,
+	        success : function(data){
+	        	if(data.successful){
+	        		var html="";
+	        		html+='<option value="">请选择</option>';
+	        		$.each(data.items,function(index,item){
+	        			html+='<option value="'+item.id+'">'+item.title+'</option>';
+	        		})
+	        		$("#procedureId").html(html);
+	        		form.render("select");
+	        	}
+	        },
+	        error : function(data){
+	        	layer.msg('工作流加载失败！');
+	        }
+	    }); 
+		getDisease();
+		//获取服务分类
+	    function getDisease(){
+	    	$.get('/api/contracte/queryDictionary?typeId=31',function(res){
+				if(res.successful){
+					if(res.data){
+						var option = '';
+						$.each(res.data,function(index,item){
+							option += '<option value="'+item.itemId+'">'+item.itemName+'</option>'
+						})
+						$('#serviceType').html('<option value="">请选择服务</option>').append(option);
+						form.render();
+					}
+				}else{
+					layer.msg('服务分类获取失败！');
+				}
+			})
+	    };
+        //监听提交
+        /* form.on('submit(formDemo)', function(data){
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        }); */
+       	/* $("#checkLabel").on("click",function(){
+       		window.base.getLabel();
+       		return false;
+       	}); */
+        $("#checkGoods").on("click",function(){
+       		window.base.getGoods();
+       		return false;
+       	});
+        //获取url参数
+        function getParams(){
+        	var url = location.search.replace(/^\?/,'').split('&');
+    	    var paramsObj = {};
+    	    for(var key=0;key<url.length;key++){
+    	    	var param =url[key].split('=');
+    	        paramsObj[param[0]]=unescape(decodeURI(param[1]));
+    	    }
+    	    return paramsObj;
+        }
+        var paramsObj = getParams();
+        //带出数据
+        if(!!paramsObj.id){
+        	$.ajax({
+    	    	url:'/service/queryGoodsById?id='+paramsObj.id,
+    	        type:'POST',
+    	        success : function(data){
+    	        	var list = data.data;
+    	        	if(data.successful){
+    	        		$("#procedureId").val(list[0].procedureId);
+    	        		if(list[0].status!="0"){
+	    	        		$("#procedureId").attr("disabled","disabled");
+    	        		}
+    	        		$("#service_id").val(list[0].id);
+    	        		$("#serviceName").val(list[0].name);
+    	        		$("#serviceAttribute").val(list[0].serviceAttribute);
+    	        		$("#serviceType").val(list[0].serviceType);
+    	        		$('.imgBox img').attr('src',list[0].imgUrl);
+    	        		$("#price").val(list[0].price);
+    	        		//$("#labelBox").append("<input type='hidden' id='labelIds' value='"+list[0].keywordsIdList+"'/><textarea style='margin-top: 10px;' disabled id='label_list' class='layui-textarea'>"+list[0].keywordsName+"</textarea>");
+    	        		$("#serviceDesc").html(list[0].description);
+    	        		$("#goods_id").val(list[0].goodsIdList);
+    	        		var goods_img = "",goods_id="";
+    	        		if(list[0].goodsInfoList){
+    	        			for(var i = 0;i < list[0].goodsInfoList.length;i++){
+        	        			goods_img +='<img alt="图片加载出错" src="'+list[0].goodsInfoList[i].imgUrl+'" title="'+list[0].goodsInfoList[i].goodsName+'">';
+        	        			if(goods_id){
+        	        				goods_id+=",";
+        	        			}
+        	        			goods_id+=list[0].goodsInfoList[i].id;
+        	        		}
+    	        		}
+    	        		$("#goods_img").html(goods_img);
+    	        		/* if(list[0].keywordsList){
+    	        			 var keywordsName = list[0].keywordsName?list[0].keywordsName:"";
+    	        			 var keywordsIdList = list[0].keywordsIdList?list[0].keywordsIdList:"";
+    	        			 $("#labelBox").html("<input type='hidden' id='labelIds' value='"+keywordsIdList+"'/><textarea style='margin-top: 10px;' disabled id='label_list' class='layui-textarea'>"+keywordsName+"</textarea>")
+    	        		} */
+    	        		$("#goods_img").html(goods_img);
+    	        		$("#goods_id").val(goods_id);
+    	        		form.render();
+    	        	}
+    	        },
+        		error : function(data){
+    	        	layer.msg('加载失败！');
+    	        }
+    	    });
+        }
+        $("#sercer_submit").on("click",function(){
+        	/* if(!$("#procedureId").val()){
+        		layer.msg("请选择工作流！");
+        		return ;
+        	}  */
+        	var roleId = window.utils.getCookie("roleId");
+            var src = "",src_update = "";
+            if(roleId == 3){
+            	src = "/jyservice/add";
+            	src_update = "/jyservice/update"
+            }else{
+            	src = "/service/add";
+            	src_update = "/service/update"
+            }
+        	var this_ = $(this);
+        	$(this).addClass("layui-btn-disabled");
+        	if(!$("#serviceName").val()){
+        		layer.msg("服务名称不能为空！");
+        		$(this).removeClass("layui-btn-disabled");
+        		return ;
+        	}
+        	if($("#serviceName").val().length>25){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("服务名称不能超过25个字符！");return ;
+        	}
+        	if(!$("#serviceAttribute").val()){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("服务属性不能为空！");return ;
+        	}
+        	if(!$("#serviceType").val()){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("服务分类不能为空！");return ;
+        	}
+        	imgUrl = imgUrl || $('.imgBox img').attr('src');
+        	if(!imgUrl){
+        		$(this).removeClass("layui-btn-disabled");
+    			layer.msg('服务图片不能为空！');
+    			return;
+    		}
+        	if(!$("#price").val()){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("定价不能为空！");return ;
+        	}
+        	if($("#serviceDesc").val().length>100){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg('服务介绍不能超过100字！');
+        		return;
+        	}
+        	
+       	    var reg = /(^[1-9]([0-9]+)?(\.[0-9]{1,2})?$)|(^(0){1}$)|(^[0-9]\.[0-9]([0-9])?$)/;
+        	if(!reg.test($("#price").val())){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("请输入正确的价格格式！");return ;
+        	}
+        	/* if(!$("#goods_id").val()){
+        		layer.msg("请绑定至少一个商品！");return ;
+        	} */
+        	/* if(!$("#labelIds").val()){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("请添加至少一个标签！");return ;
+        	} */
+        	if(!$("#serviceDesc").val()){
+        		$(this).removeClass("layui-btn-disabled");
+        		layer.msg("服务介绍不能为空！");return ;
+        	}
+        	var obj = new Object();
+        	obj.procedureId = $("#procedureId").val();
+        	obj.procedureName = $("#procedureId option:selected").text();
+            obj.name = $("#serviceName").val();
+            obj.serviceAttribute = $("#serviceAttribute").val();
+            obj.serviceType = $("#serviceType").val();
+            obj.imgUrl = imgUrl;
+            obj.price = $("#price").val();
+            /* obj.keywordsIdList = $("#labelIds").val(); */
+            obj.description = $("#serviceDesc").val();
+            obj.goodsIdList = $("#goods_id").val();
+            obj.createUserId = managerId;
+        	if(!!$("#service_id").val()){//更新
+        		obj.id=paramsObj.id;
+        		$.ajax({
+	                url:src_update,
+	                type:'POST',
+	                data:$.toJSON(obj),
+	                dataType:"json",
+	                contentType: "application/json",
+	                success : function(data){
+	               			if(data.successful){
+			               		layer.msg("修改服务成功！",{time: 2000},function(){
+	               					window.location.href="serviceManage.html";
+			               		});
+		                	}else{
+		                		this_.removeClass("layui-btn-disabled");
+		                		layer.msg(data.resultCode.message);
+		                	}
+	                },
+	                error : function(data){
+	                	this_.removeClass("layui-btn-disabled");
+	                	layer.msg('修改失败！');
+	                }
+	            });
+        	}else{//新增
+	            $.ajax({
+	                url:src,
+	                type:'POST',
+	                data:$.toJSON(obj),
+	                dataType:"json",
+	                contentType: "application/json",
+	                success : function(data){
+	                	if(data.successful){
+		               		layer.msg("添加服务成功！",{time: 2000},function(){
+               					window.location.href="serviceManage.html";
+		               		});
+	                	}else{
+	                		this_.removeClass("layui-btn-disabled");
+	                		layer.msg(data.resultCode.message);
+	                	}
+	                },
+	                error : function(data){
+	                	this_.removeClass("layui-btn-disabled");
+	                	layer.msg('添加失败！');
+	                }
+	            });
+        	}
+        });
+        //上传图片
+	    var imgUrl=null;
+	    $('#upload').on('change',function(){
+    		preview(this);
+        	var formData = new FormData(document.getElementById("uploadFile"));
+			$.ajax({
+				type: "POST",
+				url: "/file/upload",
+				data: formData,
+				cache: false,
+				processData: false,
+				contentType: false,
+				dataType: "json",
+				success: function(res) {
+					if(res.successful){
+						imgUrl = res.data;
+					}
+					layer.msg(res.resultCode.message);
+				},
+				error: function(error) {
+					layer.msg("图片上传到服务器失败");
+				}
+			});
+	    })
+		//图片预览，兼容各个浏览器
+		function preview(file) {
+			if(file.files && file.files[0]) {
+				var reader = new FileReader();
+				reader.onload = function(evt) {
+					$('.imgBox img').attr('src', evt.target.result);
+				}
+				reader.readAsDataURL(file.files[0]);
+			} else {
+				$('.imgBox img').attr('src', file.value);
+			}
+		};
+    });
+</script>
+</body>
+</html>

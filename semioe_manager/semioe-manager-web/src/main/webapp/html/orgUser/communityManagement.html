@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>社区管理</title>
+<link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+<style>
+	#addCommunity{display:none; padding-top:30px;}
+	.classCenter,.list-table th{text-align:center;}
+</style>
+</head>
+<body>
+<div class="layui-main"  style="width: auto">
+	<div class="layui-form" style='text-align:right'>
+		<button class="layui-btn" id="addBtn">添加</button>
+	</div>
+	<div class="list classCenter">
+		<table class="layui-table list-table">
+            <colgroup>
+                 <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>名称</th>
+            </tr>
+            </thead>
+            <tbody>
+            	
+            </tbody>
+        </table>	
+        <div id="listPage"></div>
+	</div>
+	<div class="layui-form" id="addCommunity">
+		<div class="layui-form-item">
+		    <label class="layui-form-label">社区名称</label>
+		    <div class="layui-input-block">
+		      <input type="text" autocomplete="off" placeholder="请输入社区名称" class="layui-input" id="communityName">
+		    </div>
+		  </div>
+		  <div class="layui-form-item classCenter">
+		     <button class="layui-btn" id="sure">确定</button>
+		  </div>
+	</div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="../../js/utils.js"></script>
+<script type="text/javascript" src="../../js/jquery-json.js"></script>
+<script>
+$(function(){
+    layui.use(['laypage', 'layer','form','laydate'], function () {
+        var $ = layui.jquery;
+        var laypage = layui.laypage, layer = layui.layer, laydate = layui.laydate, form = layui.form();
+
+		var orgId = window.utils.getCookie('managerId');
+        /* 添加社区 */
+		$('#addBtn').click(function(){
+			layer.open({
+		  	  type:1
+		  	   ,title:'添加'
+		  	   ,content: $('#addCommunity')
+		         ,area: ['500px','300px']
+		  })
+		})
+		$('#sure').click(function(){
+			var communityName = $.trim($('#communityName').val());
+			if(communityName == ''){
+				layer.msg('社区名称不能为空');
+				return false;
+			}
+			$(this).attr('disabled',true);
+			$.ajax({
+				url:'/orgCommInfo/addOrgCommInfo',
+				type: 'POST',
+				data: $.toJSON({orgId:orgId,communityName:communityName}),
+				dataType: "json",
+				contentType: "application/json",
+	        		success:function(res){
+	        			if(res.successful && res.resultCode.code=="SUCCESS"){
+	    					layer.msg('添加成功');
+	    					window.location.reload(true);
+	    				}else{
+	    					layer.msg('添加失败,'+res.resultCode.message);
+	    					$('#sure').removeAttr('disabled');
+	    				}
+	        		}
+			})
+		})
+		/* 获取社区列表 */
+		getCommunityLis();
+		function getCommunityLis(){
+        		$.get('/orgCommInfo/getAllOrgCommInfo?orgId='+orgId,function(res){
+        			if(res.successful){
+        				var tableHtml = '';
+        				$.each(res.data,function(index,item){
+        					tableHtml += '<tr><td>'+item.communityName+'</td></tr>'
+        				})
+        				if(tableHtml == ''){
+        					$('.list-table tbody').html('<tr><td>暂无数据</td></tr>')
+        				}else{
+        					$('.list-table tbody').html(tableHtml);
+        				}
+        			}else{
+        				$('.list-table tbody').html('<tr><td>列表获取失败</td></tr>')
+        			}
+        		})
+        }
+    })
+})
+</script>
+</body>
+</html>

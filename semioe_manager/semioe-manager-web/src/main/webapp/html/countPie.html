@@ -1,0 +1,98 @@
+ <!DOCTYPE html>
+<html lang="en" style="height: 95%;">
+<head>
+    <meta charset="UTF-8">
+    <title>订单统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/operationData.css" media="all">
+</head>
+<body style="height: 100%;">
+	<div class="layui-main" style="width: auto">
+		<div class="layui-form">
+			<div class="layui-tab layui-tab-brief " lay-filter="docDemoTabBrief">
+				<div class="layui-tab-content">
+					<!-- 统计 -->
+					<div class="layui-tab-item layui-show" id="lytj">
+						<div class="layui-form-item my-tab-select">
+							<div id="pieCharts"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="../../js/utils.js"></script>
+<script src="../../js/highcharts.js"></script>
+<!-- <script src="../../js/highstock.js"></script> -->
+<script type="text/javascript">
+var pieHeight = $("body").height()-100;
+$('#pieCharts').height(pieHeight);
+var seriesData=[];
+var tittle=window.utils.getRequestParam("dutiesName");
+var keywordsId= window.utils.getRequestParam("dutiesKey");
+$.ajax({
+	  url:'/sbOrderStatistic/getSbOrgDutiesCount?keywordsId='+keywordsId,
+	  type:'GET',
+	  async:false,
+      success:function(data){
+	   	  if(data.successful){
+	   		  if(!!data.data){
+	   			  for(let item of data.data){
+	   				 var obj = new Object();
+	   				 obj.name=item.dutiesName;
+					 obj.y=item.dutiesCount;
+					 obj.dutiesKey=item.dutiesKey;
+   				 	 seriesData.push(obj);
+	   			  }
+	   		  }else{
+	   			  layer.msg("暂无数据！")
+	   		  }
+	   	 }
+     }
+})
+$('#pieCharts').highcharts({
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false
+    },
+    title: {
+        text: tittle+"履约统计"
+    },
+    subtitle: {
+	    text: '单位（人次）'
+    },
+    tooltip: {
+        headerFormat: '{series.name}<br>',
+        pointFormat: '{point.name}: {point.y} ，<b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}: {point.y} ， <b>{point.percentage:.1f} %',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        type: 'pie',
+        name: tittle+'履约占比',
+        data: seriesData
+    }]
+});
+</script>
+</body>
+</html>  

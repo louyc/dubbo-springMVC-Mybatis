@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">厂商名称<span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmName" required  lay-verify="required" placeholder="请输入厂商名称" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">厂商描述<span>*</span></label>
+        <div class="layui-input-block">
+            <textarea id="firmDesc" placeholder="请输入厂商描述" class="layui-textarea"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">厂商地址<span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmAdress" placeholder="请输入厂商地址" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">厂商邮编<span>&nbsp;</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmPostcode" placeholder="请输入厂商邮编" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">厂商联系人<span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmContact" placeholder="请输入厂商联系人" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+    	<label class="layui-form-label">厂商联系方式<span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmPhone" required lay-verify="required" placeholder="请输入厂商联系方式" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">本部联系厂商负责人<span>&nbsp;</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmResponsible" placeholder="请输入本部联系厂商负责人" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+    	<label class="layui-form-label">本部联系厂商负责人联系方式<span>&nbsp;</span></label>
+        <div class="layui-input-block">
+            <input type="text" id="firmResponsiblePhone" placeholder="请输入本部联系厂商负责人联系方式" autocomplete="off" class="layui-input"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+</div>
+
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="../../js/equipment/addVender.js" charset="utf-8"></script>
+</body>
+</html>

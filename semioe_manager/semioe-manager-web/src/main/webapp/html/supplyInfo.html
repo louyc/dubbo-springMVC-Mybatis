@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>补充信息</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="icon" href="../favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" href="/layui/css/layui.css">
+<style>
+	.info-box {
+		width: 500px;
+		margin: 50px auto;
+	}	
+	.tab-title {
+		text-align: center;
+	}
+	.info-box .layui-form-label {
+		width: 80px;
+	}	
+	.info-box .layui-input-block {
+		margin-left: 110px;
+	}
+	.btns {
+		text-align: center;
+	}
+	.btns .layui-btn {
+		padding: 0 40px;
+	}
+	.layui-form-item .imgPreview {
+		width: 100px;
+		height: 100px;
+	}	
+	.imgPreview img {
+		width: 100%;
+		height: 100%;
+	}	
+	input[type="file"] {
+		width: 92px;
+		height: 38px;
+		margin-left: -96px;
+		vertical-align: middle;
+		opacity: 0;
+		filter: alpha(opacity = 0);
+	}
+	.checkPic{vertical-align: middle;}
+	.layui-form-item .area{width:115px; margin-right:5px;}
+	.layui-form-item .area:last-child{margin-right:0}
+</style>
+</head>
+<body>
+	<div class="layui-box info-box">
+		<div class="layui-tab">
+			<ul class="layui-tab-title tab-title">
+				<li class="layui-this" value="1">个人专家</li>
+				<li value="2">机构</li>
+			</ul>
+			<div class="layui-tab-content">
+				<div class="layui-tab-item layui-form layui-show">
+					<div class="layui-form-item">
+						<label class="layui-form-label">姓名</label>
+						<div class="layui-input-block">
+							<input id="name" type="text" name="name" autocomplete="off"
+								placeholder="请输入姓名" class="layui-input" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">头像</label>
+						<div id="avatarPreview" class="imgPreview layui-input-inline">
+							<img src="" />
+						</div>
+						<div class="layui-input-inline">
+							<form enctype="multipart/form-data" method="post">
+								<button class="layui-btn checkPic" id="uploadAvatar">选择图片</button>
+								<input type="file" name="file" id="pic"
+									accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" />
+							</form>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">科室</label>
+						<div class="layui-input-block">
+							<select name="docType" id="docType"> 
+								<option value="">请选择个人认证类型</option>
+								<option value="6">体重管理</option>
+								<option value="7">慢性病</option>
+								<option value="8">内科</option>
+								<option value="9">外科</option>
+								<option value="10">肿瘤</option>
+								<option value="11">儿科</option>
+								<option value="12">妇科</option>
+								<option value="13">心理健康</option>
+								<option value="14">其他</option>
+							</select>
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">工作单位</label>
+						<div class="layui-input-block">
+							<input id="work" type="text" name="work" autocomplete="off"
+								placeholder="请输入工作单位" class="layui-input" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">岗位职称</label>
+						<div class="layui-input-block">
+							<input id="title" type="text" name="work" autocomplete="off"
+								placeholder="请输入岗位职称" class="layui-input" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">擅长技能</label>
+						<div class="layui-input-block">
+							<input id="skill" type="text" name="skill" autocomplete="off"
+								placeholder="请输入您擅长的技能" class="layui-input" />
+						</div>
+					</div>
+					<div class="layui-form-item">
+						<label class="layui-form-label">资质证书</label>
+						<div id="personImages" class="layui-input-inline">
+							<button class="layui-btn checkPic">选择图片</button>
+							<input type="file" name="file" class="layui-upload-file" id="certificate" multiple="multiple" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" />
+						</div>
+						<div class="layui-form-mid layui-word-aux">最多支持上传五张图片</div>
+						<div class="layui-clear blockImages"></div>
+					</div>
+					<div class="layui-form-item">
+					      <label class="layui-form-label">简介</label>
+					      <div class="layui-input-block">
+					       	<textarea name="desc" maxlength="150" placeholder="最多输入150个字符" class="layui-textarea desc"></textarea>
+					      </div>
+				     </div>
+				</div>
+				<div class="layui-tab-item">
+					<form class="layui-form" action="">
+						<div class="layui-form-item">
+							<label class="layui-form-label">机构类型</label>
+							<div class="layui-input-block">
+								<select name="orgType" id="orgType"> 
+									<option value="">请选择机构类型</option>
+									<option value="0">医院</option>
+									<option value="1">健康服务机构</option>
+									<option value="2">诊所</option>
+									<option value="3">药店</option>
+									<option value="4">社区卫生服务中心</option>
+									<option value="5">智能健康中心</option>
+								</select>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">机构名称</label>
+							<div class="layui-input-block">
+								<input id="orgName" type="text" name="name" autocomplete="off"
+									placeholder="请输入机构名称" class="layui-input" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">科室</label>
+							<div class="layui-input-block" id="keshi">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">所在地区</label>
+							<div class="layui-input-block">
+								<div class="layui-input-inline area">
+									<select name="province" id="province" lay-filter="province"> 
+										<option value="">请选择省份</option>
+									</select>
+								</div>
+								<div class="layui-input-inline area">
+									<select name="city" id="city" lay-filter="city"> 
+										<option value="">请选择城市</option>
+									</select>
+								</div>
+								<div class="layui-input-inline area">
+									<select name="town" id="town"> 
+										<option value="">请选择乡/镇</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">LOGO</label>
+							<div class="imgPreview layui-input-inline">
+								<img src="" />
+							</div>
+							<div class="upload-box">
+								<button class="layui-btn">选择图片</button>
+								<input type="file" name="file" class="layui-upload-file" id="logo" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">擅长领域</label>
+							<div class="layui-input-block">
+								<input id="field" type="text" name="field" autocomplete="off"
+									placeholder="请输入您擅长的领域" class="layui-input" />
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">机构证明</label>
+							<div class="layui-input-inline">
+								<button class="layui-btn checkPic">选择图片</button>
+								<input type="file" name="file" class="layui-upload-file"
+									id="aptitude" multiple="multiple"
+									accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" />
+							</div>
+							<div class="layui-form-mid layui-word-aux">最多支持上传五张图片</div>
+							<div class="layui-clear blockImages"></div>
+						</div>
+						<div class="layui-form-item">
+						      <label class="layui-form-label">简介</label>
+						      <div class="layui-input-block">
+						       	<textarea name="desc" class="layui-textarea desc"></textarea>
+						      </div>
+					     </div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="layui-box btns">
+			<button class="layui-btn" id="save">保存</button>
+		</div>
+	</div>
+	<script src="/js/jquery-2.1.1.min.js"></script>
+	<script src="/layui/layui.js"></script>
+	<script src="/js/tool.js"></script>
+	<script src="/js/jquery-json.js"></script>
+	<script>
+		function GetRequest() {
+			var url = location.search;
+			var theRequest = new Object();
+			if(url.indexOf("?") != -1) {
+				var str = url.substr(1);
+				strs = str.split("&");
+				for(var i = 0; i < strs.length; i++) {
+					theRequest[strs[i].split("=")[0]] = unescape(strs[i].split("=")[1]);
+				}
+			}
+			return theRequest;
+		}
+		var managerId = GetRequest().managerId; //用户ID
+		var state = GetRequest().state; //流程状态
+		layui.use(['form', 'layer', 'element'], function() {
+			var $ = layui.jquery,form = layui.form(),layer = layui.layer,element = layui.element();
+			var tags="";
+			//科室下拉加载数据
+			getGoods();
+			function getGoods(){
+				$.ajax({
+	            	url:'/deptdic/query',   
+	            	type:'GET',
+	            	async: false,
+	            	success:function(data){
+	            			tags = data
+	            		if(data.successful){
+	            			var str='',data=data.data,checkBoxStr="";
+	                		$.each(data,function(index,item){
+	                			str+='<option value="'+item.id+'">'+item.name+'</option>';
+	                			checkBoxStr+='<input type="checkbox" name="'+item.id+'" title="'+item.name+'">';
+	                		})
+	                		$('#docType').html('<option value="">请选择</option>').append(str);
+	                		$("#keshi").html(checkBoxStr);
+	                		form.render();
+	            		}
+	            	},
+	            	error:function(error){
+	            		layer.msg('科室加载失败');
+	            	}
+	        	})
+		    }
+			if(state=="PEDING" || state=="REJECT"){
+			/* if(state == "INIT" || state == "REJECT") { */
+				$.ajax({
+					url: '/backstage/queryOne',
+					type: 'POST',
+					data: {'managerId': managerId},
+					success: function(data) {
+						var roleId = data.data.roleId;
+						$(".tab-title li").hide();
+						$(".tab-title li[value='" + roleId + "']").show().click();
+						getProvince(data.data.provinceCode);
+						getCity(data.data.provinceCode,data.data.cityCode);
+						getTown(data.data.cityCode,data.data.townCode);
+						//在待审核状态要带出个人信息，并不可编辑
+						if(state == "PEDING") {
+							$("#pic,#logo,#certificate,#aptitude").unbind();
+							$('button,input[type="file"]').attr("disabled", true);
+							$('button').css('display','none');
+							if(roleId == "1") {
+								$("#name").val(data.data.name ? data.data.name : "").attr("disabled", true);
+								$("#work").val(data.data.company ? data.data.company : "").attr("disabled", true);
+								$('#title').val(data.data.title ? data.data.title : "").attr("disabled", true);
+								$("#skill").val(data.data.skills ? data.data.skills : "").attr("disabled", true);
+								$(".desc").val(data.data.desc ? data.data.desc : "").attr("disabled", true);
+								$("#docType").val(data.data.type ? data.data.type : "").attr("disabled", true);
+							} else {
+								var orgType = data.data.type;
+								$("#orgType").val(orgType ? orgType : '').attr("disabled", true);
+								$("#orgName").val(data.data.name ? data.data.name : "").attr("disabled", true);
+								$("#field").val(data.data.skills ? data.data.skills : "").attr("disabled", true);
+								$(".desc").val(data.data.desc ? data.data.desc : "").attr("disabled", true);
+								$('#province').attr("disabled", true);
+							 	$('#city').attr("disabled", true);
+							 	$('#town').attr("disabled", true);
+							 	
+							 	var tagData=tags.data,checkBoxStr="",listDepart=data.data.listDepart;
+								var listDepartIds="";
+								for(var i =0;i<listDepart.length;i++){
+									if(listDepartIds){
+										listDepartIds+=",";
+									}
+									listDepartIds+=listDepart[i].id;
+								}
+		                		$.each(tagData,function(index,item){
+	                				if(listDepartIds.indexOf(item.id)>=0){
+	                					checkBoxStr+='<input type="checkbox" name="'+item.id+'" title="'+item.name+'" checked>';
+	                				}else{
+	                					checkBoxStr+='<input type="checkbox" name="'+item.id+'" title="'+item.name+'">';
+	                				}
+		                		})
+		                		$("#keshi").html(checkBoxStr);
+							}
+							form.render();
+						} else if(state == "REJECT") { //退回状态要带出信息，并可以编辑
+							if(roleId == "1") {
+								$("#name").val(data.data.name ? data.data.name : "");
+								$("#work").val(data.data.company ? data.data.company : "");
+								$('#title').val(data.data.title ? data.data.title : "");
+								$("#skill").val(data.data.skills ? data.data.skills : "");
+								$(".desc").val(data.data.desc ? data.data.desc : "");
+								$("#docType").val(data.data.type ? data.data.type : "");
+							} else {
+								var orgType = data.data.type;
+								$("#orgType").val(orgType ? orgType : '');
+								$("#orgName").val(data.data.name ? data.data.name : "");
+								$("#field").val(data.data.skills ? data.data.skills : "");
+								$(".desc").val(data.data.desc ? data.data.desc : "");
+								var tagData=tags.data,checkBoxStr="",listDepart=data.data.listDepart;
+								var listDepartIds="";
+								for(var i =0;i<listDepart.length;i++){
+									if(listDepartIds){
+										listDepartIds+=",";
+									}
+									listDepartIds+=listDepart[i].id;
+								}
+		                		$.each(tagData,function(index,item){
+	                				if(listDepartIds.indexOf(item.id)>=0){
+	                					checkBoxStr+='<input type="checkbox" name="'+item.id+'" title="'+item.name+'" checked>';
+	                				}else{
+	                					checkBoxStr+='<input type="checkbox" name="'+item.id+'" title="'+item.name+'">';
+	                				}
+		                		})
+		                		$("#keshi").html(checkBoxStr);
+							}
+							form.render();
+						}
+						loadImage(data);
+					},
+					error: function(data) {
+						layer.msg('登录失败！');
+						$('#login').removeAttr('disabled');
+					},
+				});
+			};
+			var tempAvatarUrl = '',
+				tempImagesUrl = [];
+			$('#pic,#logo').change(function(e) {
+				var fileUrl = $.trim($(this).val());
+				var extStart = fileUrl.lastIndexOf(".");
+				var ext = fileUrl.substring(extStart, fileUrl.length).toUpperCase();
+				if(fileUrl == '') {
+					layer.msg('请选择图片上传！');
+					return;
+				} else if(ext != '.PNG' && ext != '.GIF' && ext != '.BMP' && ext != '.JPG' && ext != '.JPEG') {
+					layer.msg('图片格式不支持，请重新选择上传！');
+					return
+				} 
+				var size = this.files[0].size;
+				if(size>51200){
+					layer.msg('图片不能大于50KB');return;
+				}
+				preview(this);
+				imgUpload(this, function(data) {
+					if(data.successful) {
+						tempAvatarUrl = data.data;
+					} else {
+						layer.msg("图片上传到服务器失败！");
+					}
+				}, function(error) {
+					layer.msg("图片上传到服务器失败");
+					console.log(error);
+				});
+			});
+			//图片预览，兼容各个浏览器
+			function preview(file) {
+				if(file.files && file.files[0]) {
+					var reader = new FileReader();
+					reader.onload = function(evt) {
+						$('.layui-show .imgPreview img').attr('src', evt.target.result);
+					}
+					reader.readAsDataURL(file.files[0]);
+				} else {
+					$('.layui-show .imgPreview img').attr('src', file.value)
+				}
+			};
+			$('#certificate,#aptitude').change(function(e) {
+				if((tempImagesUrl && tempImagesUrl.length >= 5)) {
+					return layer.msg('已达到文件上限，无法上传');
+				}
+				if((this.files.length + tempImagesUrl.length) > 5) {
+					var _this = this;
+					var num = this.files.length - (5 - tempImagesUrl.length);
+					return layer.msg('已达到文件上限，超出' + num + '张，最多支持上传五张图片。请重新选择', function() {
+						/* _this.files = _this.files.splice(0,num);
+						var newFiles = {};
+						for (var i = 0, file; file = _this.files[i]; i++) {
+							if(i>=num){return;}
+							newFiles[i] = file;
+						} */
+					});
+				}
+				if(!this.files || this.files.length == 0) {
+					return;
+				}
+				for(var i = 0, file; file = this.files[i]; i++) {
+					var fileUrl = $.trim(file.name);
+					var extStart = fileUrl.lastIndexOf(".");
+					var ext = fileUrl.substring(extStart, fileUrl.length).toUpperCase();
+					if(fileUrl == '') {
+						layer.msg('请选择图片上传！');
+						return;
+					} else if(ext != '.PNG' && ext != '.GIF' && ext != '.BMP' && ext != '.JPG') {
+						layer.msg('图片格式不支持，请重新选择上传！');
+						return
+					}
+				}
+				var that = this;
+				imgUpload(this, function(data) {
+					if(data.successful) {
+						var temp = data.data ? data.data.split(';') : [];
+						if(temp && temp[temp.length - 1] === "") {
+							temp.pop();
+						}
+						if(tempImagesUrl.length > 0) {
+							tempImagesUrl = tempImagesUrl.concat(temp);
+						} else {
+							tempImagesUrl = temp;
+						}
+						var html = '';
+						var style = 'display:inline-block;vertical-align: middle;width:95px;height:95px;text-align:center;'
+						console.log(that.files);
+						for(var i = 0, file; file = that.files[i]; i++) {
+							if(that.files && file) {
+								html += '<div style="' + style + '"><img style="width: 100%;height:100%;" src="' + window.URL.createObjectURL(file) + '"/><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;" icon-num="'+i+'">&#xe640;</i></div>';
+							} else {
+								html += '<div style="' + style + '"><img style="width: 100%;height:100%;" src="' + file.value + '"/><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;" icon-num="'+i+'">&#xe640;</i></div>';
+							}
+						}
+						delAndEnlarge(html,tempImagesUrl);
+					} else {
+						layer.msg("图片上传到服务器失败！");
+					}
+				}, function(error) {
+					layer.msg("图片上传到服务器失败");
+					console.log(error);
+				});
+			});
+			getProvince('');
+			//获取省份
+			function getProvince(provinceVal){
+				$.get('/address/getAllProvince',function(res){
+					if(res.successful){
+						var option = '';
+						$.each(res.data,function(index,item){
+							if(provinceVal == item.code){
+								option += '<option value="'+item.code+'" selected>'+item.name+'</option>';
+							}else{
+								option += '<option value="'+item.code+'">'+item.name+'</option>';
+							}
+						})
+						$('#province').html('<option value="">请选择省份</option>').append(option);
+						form.render('select');
+					}else{
+						layer.msg('获取省份失败！')
+					}
+				})
+			}
+			form.on('select(province)', function(data){
+			  	var provinceCode = data.value;
+				getCity(provinceCode,'');
+			});
+			//获取城市
+			function getCity(provinceCode,cityVal){
+				$.get('/address/getCityByProvinceCode?provinceCode='+provinceCode,function(res){
+					if(res.successful){
+						var option = '';
+						$.each(res.data,function(index,item){
+							option += '<option value="'+item.code+'" '+(cityVal == item.code ? "selected" : "")+'>'+item.name+'</option>';
+						})
+						$('#city').html('<option value="">请选择城市</option>').append(option);
+						form.render('select');
+					}else{
+						layer.msg('获取城市失败！')
+					}
+				})
+			}
+			form.on('select(city)', function(data){
+			  	var cityCode = data.value;
+			  	getTown(cityCode,'');
+			});
+			//获取乡/镇
+			function getTown(cityCode,townVal){
+				$.get('/address/getTownByTownCode?cityCode='+cityCode,function(res){
+					if(res.successful){
+						var option = '';
+						$.each(res.data,function(index,item){
+							option += '<option value="'+item.code+'" '+(townVal == item.code ? "selected" : "")+'>'+item.name+'</option>';
+						})
+						$('#town').html('<option value="">请选择乡/镇</option>').append(option);
+						form.render('select');
+					}else{
+						layer.msg('获取乡/镇失败！')
+					}
+				})
+			}
+			var role = 1,
+				name = '',
+				imageUrl = '',
+				skills = '',
+				certificationsUrl = '',
+				company = '',
+				type = '',
+				title = '';
+	
+			$('.tab-title li').on('click', function() {
+				role = $(this).attr('value');
+			})
+	
+			//保存信息
+			$('#save').on('click', function() {
+				$('#save').attr('disabled', true);
+				var provinceCode = $('#province').val(),
+				 	 cityCode = $('#city').val(),
+				 	 townCode = $('#town').val(),keshi = "";	
+				if(role == 1) {
+					name = $.trim($('#name').val());
+					company = $.trim($('#work').val());
+					title = $.trim($('#title').val());
+					skills = $.trim($('#skill').val());
+					type = $('#docType').val();
+					if(name == '') {
+						layer.msg('姓名不能为空');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(company == '') {
+						layer.msg('请输入工作单位');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(title == '') {
+						layer.msg('请输入岗位职称');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(skills == '') {
+						layer.msg('擅长技能不能为空');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+				} else {
+					type = $('#orgType').val();
+					name = $.trim($('#orgName').val());
+					skills = $.trim($('#field').val());
+					$("#keshi input").each(function(){
+						if($(this).is(":checked")){
+							if(keshi){
+								keshi+="$";
+							}
+							keshi+=$(this).attr("name");
+						}
+					})
+					if(keshi == ""){
+						layer.msg('请选择科室');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(type == '') {
+						layer.msg('请选择机构类型');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(name == '') {
+						layer.msg('机构名称不能为空');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(provinceCode == ''){
+						layer.msg('请选择省份');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(cityCode == ''){
+						layer.msg('请选择城市');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(townCode == ''){
+						layer.msg('请选择乡/镇');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+					if(skills == '') {
+						layer.msg('擅长领域不能为空');
+						$('#save').removeAttr('disabled');
+						return;
+					}
+				}
+				var desc = $('.desc').val();
+				if(desc.length > 120){
+					layer.msg('简介字符长度不能超过120');
+					$('#save').removeAttr('disabled');
+					return;
+				}
+				var certificationsUrl = '';
+				var imageUrl = '';
+				if(!tempAvatarUrl) {
+					$('#save').removeAttr('disabled');
+					return layer.msg('请上传头像');
+				}
+				if(!tempImagesUrl || tempImagesUrl.length == 0) {
+					$('#save').removeAttr('disabled');
+					return layer.msg('请上传资格证书或机构证明，我们不会将信息泄露，谨做注册使用');
+				}
+				certificationsUrl = tempImagesUrl.join(';');
+				imageUrl = tempAvatarUrl;
+				/* var jso={tags: keshi,depts:"",desc:"",manager_id: managerId,image_url:"",name:""};
+				$.ajax({
+                    url:'/backstage/modify',
+      		        type:'POST',
+      		        data: jso,
+      		        dataType:"json",
+                    success:function(res){
+                    },
+                    error:function(error){
+       	        	}
+                }) */
+				var data = {
+					managerId: managerId,
+					name: name,
+					type: type,
+					imageUrl: imageUrl,
+					company: company,
+					skills: skills,
+					certificationsUrl: certificationsUrl,
+					roleId: role,
+					title:title,
+					desc:desc,
+					provinceCode: provinceCode,
+					cityCode:cityCode,
+					townCode:townCode,	
+					depts: keshi
+				};
+				$.ajax({
+					url: '/user/update',
+					type: 'POST',
+					data: $.toJSON(data),
+					dataType: "json",
+					contentType: "application/json",
+					success: function(res) {
+						if(res.status == 200) {
+							if(res.resultCode.code == 'SUCCESS') {
+								layer.msg(res.resultCode.message + '请等待审核通过。', {
+									time: 2000
+								}, function() {
+									window.utils.removeCookie('managerId');
+									window.utils.removeCookie('userName');
+									window.utils.removeCookie('roleId');
+									window.utils.removeCookie('imageUrl');
+									window.utils.removeCookie('user_id');
+									window.utils.removeCookie('token');
+									window.location.href = "/";
+								});
+							} else {
+								layer.msg(res.resultCode.message);
+							}
+						} else {
+							layer.msg('资料完善失败!');
+						}
+						$('#save').removeAttr('disabled');
+					},
+					error: function(err) {
+						layer.msg('资料完善失败!');
+					},
+				})
+			});
+			// 上传图片
+			function imgUpload(that, cb, errFn) {
+				var formData = new FormData();
+				for(var i = 0, file; file = that.files[i]; i++) {
+					formData.append('file',file);
+				}
+				$.ajax({
+					type: "POST",
+					url: "/file/upload",
+					data: formData,
+					async: false,
+					cache: false,
+					processData: false,
+					contentType: false,
+					dataType: "json",
+					success: function(data) {
+						cb(data);
+					},
+					error: function(error) {
+						errFn(error);
+					}
+				});
+			};
+			// 加载图片
+			function loadImage(data) {
+				// data.data.imageUrl = 'http://res.layui.com/images/fly/layim.jpg';
+				// data.data.certificationsUrl = 'http://res.layui.com/images/fly/fly.jpg;http://res.layui.com/images/fly/layim.jpg;http://res.layui.com/images/fly/layim.jpg;http://res.layui.com/images/fly/layim.jpg;http://res.layui.com/images/fly/layim.jpg';
+				if(data.data.imageUrl){
+					tempAvatarUrl = data.data.imageUrl;
+					$('.layui-show .imgPreview img').attr('src', data.data.imageUrl);
+				}
+				if(data.data.certificationsUrl){
+					var certificationsUrlArr = data.data.certificationsUrl ? data.data.certificationsUrl.split(';') : [];
+					if(certificationsUrlArr && certificationsUrlArr[certificationsUrlArr.length - 1] === "") {
+						certificationsUrlArr.pop();
+					}
+					tempImagesUrl = certificationsUrlArr;
+					var html = '';
+					var style = 'display:inline-block;vertical-align: middle;width:95px;height:95px;text-align:center;position:relative;margin:15px 0 30px 0';
+					$.each(certificationsUrlArr,function(key,value){
+						html += '<div style="' + style + '"><img style="width: 100%;height:100%;" src="' + value + '"/><i class="layui-icon" style="font-size: 30px; color: #1E9FFF;position: absolute;left: 32px;bottom: -35px;z-index: 1;" icon-num="'+key+'">&#xe640;</i></div>';
+					})
+					delAndEnlarge(html,tempImagesUrl);
+				}
+			}
+		});
+	    // 删除，放大
+	    function delAndEnlarge(html,tempImagesUrl){
+	    	html && $('.layui-show .blockImages').append(html);
+			$('.layui-show .blockImages div img').bind('click',function(e){
+				layer.photos({
+				    photos: $(this).parent()
+				    ,anim: 5 
+				});
+			});
+			$('.layui-show .blockImages div i.layui-icon').bind('click',function(e){
+				var _this = this;
+				layer.confirm('您确定要删除此张图片?',{title:'警告'}, function(index){
+					$('.layui-show .blockImages div')[$(_this).attr('icon-num')].remove();
+					tempImagesUrl.splice($(_this).attr('icon-num'),1);
+					$('.layui-show .blockImages div i.layui-icon').each(function(key,val){
+						$(this).attr('icon-num',key);
+					});
+				    layer.close(index);
+				});
+			});
+			if(state == 'PEDING'){
+				$('.layui-show i.layui-icon').css('display','none');
+			}
+	    }
+    </script>
+</body>
+</html>

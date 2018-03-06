@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/listStyle.css"/>
+    <style>
+        #qrcode{
+            position: absolute;
+		    top: 0;
+		    left: 0;
+		    bottom: 0;
+		    right: 0;
+		    margin: auto;
+		    width: 288px;
+		    height: 288px;
+        }
+        .layui-table td, .layui-table th{
+        	padding: 9px 8px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <form class="layui-form">
+        <ul>
+            <li>
+                <div>
+                    <label class="layui-form-label">厂商名称：</label>
+                    <select name="vender" id="vender" lay-filter="vender">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label class="layui-form-label">品牌名称：</label>
+                    <select name="brand" id="brand" lay-filter="brand">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <label class="layui-form-label">设备定义：</label>
+                    <select name="deviceClass" id="deviceClass" lay-filter="deviceClass">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </li>
+        </ul>
+        </form>
+        <p>
+            <button class="layui-btn" id="search">搜索</button>
+            <a href="/html/equipment/addDevice.html" class="layui-btn layui-btn-normal" id="addDevice" >添加</a>
+            <a class="layui-btn layui-btn-danger" href="javascript:;" id="exportBtn">导出</a>
+        </p>
+    </div>
+    <div class="layui-form list-table">
+        <table class="layui-table" style="width:100%;">
+            <colgroup>
+                <col width="100">
+                <col width="">
+                <col width="70">
+                <col width="70">
+                <col width="100">
+                <col width="100">
+                <col width="80">
+                <col width="100">
+                <col width="">
+                <col width="100">
+                <col width="100">
+                <col width="170">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>设备名称</th>
+                <th>设备描述</th>
+                <th>厂商</th>
+                <th>品牌</th>
+                <th>设备定义</th>
+                <th>设备库存</th>
+                <th>机器号</th>
+                <th>设备租金</th>
+                <th>设备投放</th>
+                <th>是否上架</th>
+                <th>是否租赁</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+</div>
+<div id="qrcode" style="display: none;padding: 10px;"></div>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="/js/qrcode.js"></script>
+<script>
+    window.onload=function(){
+        layui.use(['form','laypage', 'layer'], function(){
+            var $ = layui.jquery, form = layui.form();
+            var laypage = layui.laypage,layer = layui.layer;
+            var fid='',bid='';
+            //导出
+            $('#exportBtn').on('click',function(){
+            	var query='?';
+            	var firmName=$('#vender').val()=='all' ? '' :$('#vender').val();
+            	var brandName=$('#brand').val()=='all' ? '':$('#brand').val();
+            	var deviceType=$('#deviceClass').val()=='all' ? '':$('#deviceClass').val();
+            	if(firmName) query+='firmName='+firmName+'&';
+            	if(brandName) query+='brandName='+brandName+'&';
+            	if(deviceType) query+='deviceType='+deviceType+'&';
+            	$(this).attr('href','/excelExport/device'+query)
+            })
+            //获取设备类别
+            function deviceType(fid,bid){
+   			 $.ajax({
+                	url:'/deviceDefinition/getDeviceDefinitionList',
+                	type:'POST',
+                	data:$.toJSON({deviceFirmid:fid,deviceBrandid:bid}),
+                	contentType: "application/json",
+                	success:function(data){
+                		if(data.successful){
+                			var str='';
+                			var datas=data.items;
+                   		$.each(datas,function(index,item){
+                    			str+='<option value="'+item.id+'">'+item.definitionName+'</option>'
+                    		})
+                		}
+                		$('#deviceClass').html('<option value="all">请选择</option>').append(str);
+                		form.render();
+                	}
+                })
+   		 }
+          //获取厂商
+            function facturerList(){
+    			$.ajax({
+    	             	url:'/deviceFirms/getDeviceFirms',
+    	             	type:'POST',
+    	             	data:{},
+    	             	success:function(data){
+    	             		if(data.successful){
+    	             			var str='',data=data.data;
+    		             		$.each(data,function(index,item){
+    		             			str+='<option value="'+item.id+'">'+item.firmName+'</option>'
+    		             		})
+    		             		$('#vender').html('<option value="all">请选择</option>').append(str);	             		
+    		             		form.render();
+    	             		}
+    	             		
+    	             	}
+    	             })
+    		 }
+    		 facturerList();
+    		 form.on('select(vender)',function(data){
+    			 fid = data.value=='all'?'':data.value;
+    			 brandList(fid);
+    		 })
+   		 //品牌
+    		 function brandList(fid){
+    			 $.ajax({
+    	             	url:'/deviceBrands/selectDeviceBrandsListPage',
+    	             	type:'POST',
+    	             	async:false,
+    	             	data:{firmId:fid,pageSize :100,currentsPage :1},
+    	             	success:function(data){
+    	             		if(data.successful){
+    	             			var str='',data=data.items;
+    		             		$.each(data,function(index,item){
+    		             			str+='<option value="'+item.id+'">'+item.brandName+'</option>'
+    		             		})
+    		             		$('#brand').html('<option value="all">请选择</option>').append(str);
+    		             		form.render();
+    	             		}
+    	             		
+    	             	}
+    	             })
+    		 }
+    		 form.on('select(brand)',function(data){
+    			 bid = data.value=='all'?'':data.value;
+    			 deviceType(fid,bid);
+    		 })
+			//获取设备列表
+			var pageSize = 10,pageNum=1,pageSum=1;
+			function getDeviceList(pageNum){
+				var deviceClass = $('#deviceClass').val()=='all'?'':$('#deviceClass').val();
+				var firmName = $('#vender').val()=='all'?'':$('#vender').val();
+				var brandName = $('#brand').val()=='all'?'':$('#brand').val();
+				$.ajax({
+					url:'/deviceInfo/selectDeviceInfoListPage',
+				 	type: 'POST',
+					data: {pageSize:pageSize,currentsPage:pageNum,deviceType:deviceClass,firmName:firmName,brandName:brandName},
+			        	success:function(res){
+			        		var data = res.items;
+			        		var str = '';
+			        		var roleId= window.utils.getCookie("roleId");
+			        		if(res.successful){
+			        			pageSum = res.pagesCount;
+			        			if(data.length>0){
+			        				$.each(data,function(index,item){
+										str += '<tr id="'+item.id+'"><td>'+(item.deviceName?item.deviceName:"")+'</td>';
+										str+='<td>'+(item.deviceDesc?item.deviceDesc:"")+'</td><td>'+(item.firmName?item.firmName:'')+'</td>';
+										str+='<td>'+(item.brandName?item.brandName:'')+'</td><td>'+(item.definitionName?item.definitionName:'')+'</td>';
+										str+='<td>'+(item.deviceStock?item.deviceStock:0)+'</td><td>'+(item.deviceCode?item.deviceCode:'')+'</td>';
+										str+='<td>'+(item.deviceRental?item.deviceRental:0)+'</td>';
+										str+='<td>'+((item.userMobile?item.userMobile:' ')+' '+(item.userName?item.userName:' ')+' '+(item.deviceLocation?item.deviceLocation:' '))+'</td>';
+										str+='<td>'+(item.isPutaway=='F'?'未上架':(item.isPutaway=='T'?'已上架':''))+'</td>';
+										str+='<td>'+(item.isHired=='F'?'未租赁':(item.isHired=='T'?'已租赁':''))+'</td>';
+										str+='<td><button class="layui-btn layui-btn-small revise">修改</button>';
+										if(item.devicePicUrl){
+											str+='<button data="'+item.devicePicUrl+'" class="layui-btn layui-btn-small layui-btn-danger checkEqcode">查看二维码</button>';
+										}else{
+											str+='<button class="layui-btn layui-btn-disabled layui-btn-small layui-btn-danger checkEqcode">查看二维码</button>';
+										}
+										str+= (roleId==5) ? (item.deviceType ==1 && item.managerId && (item.isBinding=='T' || item.isBinding=='A' ) ? '<a href="javascript:;" class="layui-btn layui-btn-small layui-btn-disabled peacock" disabled' : '<a href="javascript:;" class="layui-btn layui-btn-small  peacock"')+'>开屏</a></td></tr>' : '</tr>';									
+								})
+			        			}else{
+				        			str += '<tr><td colspan="13">暂无数据</td></tr>'
+				        		}
+			        			//分页
+				        		laypage({
+						        cont: 'pagging'
+						    		, pages: pageSum
+						        , curr: res.pageNumber||1
+						        ,jump: function(obj, first){
+							        	if(!first){
+							            pageNum = obj.curr;
+							            getDeviceList(pageNum);
+						            }
+						        }
+						    });
+			        		}else{
+			        			str += '<tr><td colspan="13">列表获取失败</td></tr>' 
+			        		}
+			        		$('.list-table tbody').html(str);
+			        		$(".checkEqcode").on("click",function(){
+			        			$("#qrcode").remove();
+			        			$("body").append('<div id="qrcode" style="display: none;padding: 10px;"></div>');
+			        	        var deviceCode = $(this).attr("data");
+			        	        if(!deviceCode||deviceCode=="undefind"){
+			        	        	return false;
+			        	        }
+			        			var qrcode = new QRCode(document.getElementById("qrcode"), {
+			        				width : 288,//è®¾ç½®å®½é«
+			        	            height : 288
+			        	        });
+			        	        var erweima = deviceCode;
+			        	        qrcode.makeCode(erweima);
+			        	        layer.open({
+			                        type: 1 
+			                        ,title: '查看二维码'
+			                        ,area: ['400px', '400px']
+			                		 ,shade: 0.5
+			                        /*,maxmin: true*///缩放功能
+			                        ,offset: [ //居中显示
+			                        	$(window).height()/2-200
+			                            ,$(window).width()/2-200
+			                        ] 
+			                        ,content: $("#qrcode")
+				        	        ,zIndex: layer.zIndex //重点1
+				                    ,success: function(layero){
+				                        layer.setTop(layero); //重点2
+				                    }
+			        			});
+			        		});
+			        	},
+			        	error:function(error){
+			        		$('.list-table tbody').html('<tr><td colspan="13">列表获取失败</td></tr>');
+			        	}
+		        })
+			}
+			getDeviceList(pageNum);
+			//搜索
+			$('#search').on('click',function(){
+				getDeviceList(1);
+			})
+			//修改
+			$('.list-table').delegate('.revise','click',function(){
+				var id = $(this).parents('tr').attr('id');
+				window.location.href = '/html/equipment/addDevice.html?id='+id;
+			})
+			//开屏
+			$('.list-table').delegate('.peacock','click',function(){
+		        var managerId = window.utils.getCookie("user_id");
+		        var deviceCode=$(this).parents('tr').children('td').eq(6).text();
+		        $.ajax({
+		        	url:'/deviceBinding/deviceBindingUser?deviceCode='+deviceCode+'&managerId='+managerId,
+		        	type:'GET',
+		        	data:{},
+                	contentType: "application/json",
+                	success:function(data){
+                		if(data.successful){
+                			window.location.reload(true)
+                		}
+                	},
+                	error:function(error){
+                		layer.msg('获取失败');
+                	}
+		        })
+			})
+        });
+    }
+</script>
+</body>
+</html>

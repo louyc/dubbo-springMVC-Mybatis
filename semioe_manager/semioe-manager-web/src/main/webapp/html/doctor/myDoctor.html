@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <style type="text/css">
+    	.opa0{display:inline-block;width:70px;height:40px;opacity:0;filter:alpha(opacity=0); margin-right:-70px;position:relative;z-index: 99;}
+    	.detail dl{float:left;width:100%}
+    	.detail dl dt{float:left;margin:30px;}
+    	.detail dl dd{float:left;margin-top:30px;margin-left:5%}
+    	.detail a{display:block;float:right;margin-right:50px;}
+    </style>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <form class="layui-form">
+        <ul>
+            <li>
+                <label for="vender">医生：</label>
+                <input type="text" class="layui-input" id="doctor"/>
+            </li>
+            <li>
+                <div>
+                    <label class="layui-form-label">状态：</label>
+                    <select name="auditStatus" id="auditStatus">
+                    	<option value="all">全部</option>
+                    	<option value="0">待通过</option>
+                        <option value="1">已加入</option>
+                        <option value="2">已拒绝</option>
+                    </select>
+                </div>
+            </li>
+        </ul>
+        </form>
+        <p>
+            <button class="layui-btn " id="search">搜索</button>
+            <button class="layui-btn layui-btn-normal" id="invite">邀请医生</button>
+        </p>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%" id='doctorBox'>
+            <colgroup>
+	            	<col width="200">
+	            	<col width="200">
+	            	<col width="120">
+	            	<!-- <col width="120">
+	            	<col width="120">
+	            	<col width="120"> -->
+	            	<col>
+	            	<col width="120">
+            </colgroup>
+            <thead>
+            	<tr>
+            		<th>医生</th>
+            		<th>医院</th>
+            		<th>账号</th>
+            		<!-- <th>开始时间</th>
+            		<th>结束时间</th>
+            		<th>邀请时间</th> -->
+            		<th>工作种类</th>
+            		<th>状态</th>
+            	</tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+    
+</div>
+
+<div id='goods-info-box' class='info-box' style="display:none;margin:10px 15px">
+   	<div>
+   		<p>
+   			<label style='float:left;padding:8px 10px'>医生名字</label>
+   			<input name='phone' type="text"  id='doctorNum' class="layui-input" placeholder='请输入医生名字' style='width:300px;float:left;margin-right:20px;'>
+   		</p>
+   		<button class="layui-btn" id="searchDoctor">搜索</button>
+   		<div  class='detail' style='width:100%;margin-top:20px;display:none;border:1px solid #eee;height:200px;'>
+   			<!-- <dl>
+   				<dt></dt>
+   				<dd></dd>
+   			</dl> -->
+   		</div>
+   	</div>
+</div>
+    
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-json.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="../../js/doctor/myDoctor.js" charset="utf-8"></script>
+</body>
+</html>

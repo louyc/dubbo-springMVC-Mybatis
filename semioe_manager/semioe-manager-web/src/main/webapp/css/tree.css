@@ -1,0 +1,16 @@
+html,body{height: 100%;margin: 0;padding: 0;position: absolute;left: 0;right: 0;top: 0;bottom: 0}
+.my-tree-box{
+    position: absolute;
+    width: calc(49% - 7px);
+    left: 0;
+    top: 0;
+    bottom: 30px;
+}
+.my-node-box{
+    position: absolute;
+    width: calc(49% - 7px);
+    right: 0;
+    top: 0;
+    border: 1px solid #ddd;
+    bottom: 10px;
+}

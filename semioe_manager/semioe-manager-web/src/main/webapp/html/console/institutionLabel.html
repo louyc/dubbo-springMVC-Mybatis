@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>机构标签</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <div class="layui-form">
+        <ul>
+            <li>
+                <label for="vender">机构标签：</label>
+                <input type="text" class="layui-input" id="goodsName"/>
+            </li>
+        </ul>
+        <p>
+        	<button class="layui-btn " id="search">搜索</button>
+        	<button class="layui-btn " id="add">新增</button>
+       	</p>
+        </div>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%">
+            <colgroup>
+	            <col width="100">
+	            <col width="">
+	            <col width="200">
+	            <col width="150">
+            </colgroup>
+            <thead>
+            	<tr>
+            		<th>编号</th>
+            		<th>机构标签</th>
+            		<th>创建时间</th>
+            		<th>操作</th>
+            	</tr>
+            </thead>
+            <tbody>
+            	<tr>
+            		<td>1</td>
+            		<td>北医三院</td>
+            		<td>2017</td>
+            		<td>
+            			<button class="layui-btn layui-btn-small edit-label">编 辑</button>
+            			<button class="layui-btn layui-btn-small layui-btn-danger delect-label">删 除</button>
+            		</td>
+            	</tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+    <div id="form_add" class="layui-form" style="display: none;padding: 30px;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">机构标签</label>
+			<div class="layui-input-block">
+				<input type="text" id="label" name="name" placeholder="请输入标签名称，最长12个字符" autocomplete="off" class="layui-input" maxLength='12'/>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/tool.js" charset="utf-8"></script>
+<script type="text/javascript">
+	layui.use(['element', 'form', 'layer', 'jquery','laypage'], function() {
+		var $ = layui.jquery,form = layui.form(),element = layui.element();
+		var layer = layui.layer,laypage = layui.laypage;
+		getData();
+		function getData(){
+			name = $("#goodsName").val();
+			$.ajax({
+		    	url:'/tagsdic/query?name='+name,
+		        type:'GET',
+		        success : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	if(data.successful){
+		        		var html="";
+		        		if(data.lenght<=0){
+							layer.msg("暂无数据！");
+							return;
+		        		}
+		        		$.each(data.data,function(index,item){
+		        			html+='<tr><td>'+(index+1)+'</td>';
+		        			var name = item.name?item.name:"";
+		        			html+='<td>'+name+'</td>';
+		        			var createTime = item.createTime?item.createTime:"";
+		        			html+='<td>'+createTime+'</td>';
+		        			html+='<td><input type="hidden" value="'+item.id+'"><button name="'+name+'" class="layui-btn layui-btn-small edit-label">编 辑</button><button class="layui-btn layui-btn-small layui-btn-danger delect-label">删 除</button></td>';
+		        			html+='</tr>'
+		        		})
+		        		$("table tbody").html(html);
+		        		form.render();
+		        		$(".edit-label").click(function(){
+		        			$("#label").val($(this).attr("name"));
+		        			editLabel($(this).prev("input").val());
+		        		})
+		        		$(".delect-label").click(function(){
+		        			var id=$(this).prev("button").prev("input").val();
+		        			$.ajax({
+		        		    	url:'/tagsdic/remove',
+		        		        type:'POST',
+		        		        data:{tagId:id},
+		        		        dataType: "json",
+		        		        success : function(data){
+		        		        	if(data.status=="200"&&data.resultCode.code=="SUCCESS"){
+			        		        	layer.msg(data.resultCode.message,{time:2000},function(){
+			        		        		window.location.reload();	
+			        		        	})
+		        		        	}else{
+		        		        		layer.msg(data.resultCode.message)
+		        		        	}
+		        		        },
+		        		        error : function(data){
+		        		        	layer.msg(data.resultCode.message)
+		        		        }
+		        			})
+		        		});
+		        	}else{
+		        		layer.msg(data.resultCode.message);
+		        	}
+		        },
+		        error : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	layer.msg('加载失败！');
+		        }
+		    });
+		}
+		$("#add").on("click",function(){
+			editLabel("");
+		});
+		$("#search").on("click",function(){
+			getData();
+		})
+		function editLabel(id){
+			layer.open({
+	            title:'机构标签',
+	            type: 1,
+	            area: ['450px', '230px'],//宽高
+	            shade: 0.5,
+	            content: $('#form_add'),
+	            btn: ['确定','关闭'], //按钮
+	            yes: function(index){
+            		var name = $("#label").val(),id=id,url="",data={};
+            		if(!name){
+            			layui.msg("标签名称不能为空！");return;
+            		}
+	            	if(!!id){//id存在为修改
+            			url = "/tagsdic/modify";
+	            		data = {tagId:id,name:name};
+	            	}else{
+	            		url = "/tagsdic/add";
+	            		data = {name:name};
+	            	}
+	            	$.ajax({
+        		    	url:url,
+        		        type:'POST',
+        		        data:data,
+        		        dataType: "json",
+        		        success : function(data){
+        		        	if(data.status=="200"&&data.resultCode.code=="SUCCESS"){
+	        		        	layer.msg(data.resultCode.message,{time:2000},function(){
+	        		        		window.location.reload();	
+	        		        	})
+        		        	}else{
+        		        		layer.msg(data.resultCode.message)
+        		        	}
+        		        },
+        		        error : function(data){
+        		        	layer.msg(data.resultCode.message)
+        		        }
+        			})
+	            }
+	        });
+		}
+	});	
+</script>
+</body>
+</html>

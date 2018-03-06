@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>家医统计</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/data/userManage.css"/>
+    <style type="text/css">
+    	.layui-form-item ul li .layui-input-inline input.counts{
+    		width: 100%;margin-left: 0;
+    	}
+    	.layui-form .my-tab-select ul li.lvye{
+    		display: none;
+    	}
+    	.serviceCode{cursor: pointer;color: blue;}
+    </style>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief" id="statistics" lay-filter="filter">
+	<ul class="layui-tab-title">
+	    <li type="1" class="layui-this">性别</li>
+	    <li type="2">年龄</li>
+	    <li type="3">签约机构</li>
+	    <li type="4">签约医生</li>
+	    <li type="5">疾病</li>
+	    <li type="6">家庭组</li>
+	    <li type="7">履约情况</li>
+	</ul>
+	<form class="layui-form" id="selectForm" action="">
+		<div class="layui-form-item my-tab-select">
+		    <ul>
+		        <li>
+		            <label for="startTime">签约开始时间:</label>
+		            <input type="text" name="date" id="startTime" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})">
+		        </li>
+		        <li>
+		            <label for="endTime">签约结束时间:</label>
+		            <input type="text" name="date" id="endTime" autocomplete="off" class="layui-input" onclick="layui.laydate({elem: this})">
+		        </li>
+		        <li>
+		            <label for="signType">签约:</label>
+		            <select name="signType" id="signType">
+		                <option value="0">全部</option>
+		                <option value="1">家医</option>
+		                <option value="3">孕产</option>
+		            </select>
+		        </li>
+		        <li class="lvye">
+		            <label for="serviceType">服务种类:</label>
+		            <select name="serviceType" id="serviceType">
+		                <option value="all">全部</option>
+		                <option value="1">公共服务</option>
+		                <option value="2">其他服务</option>
+		            </select>
+		        </li>
+		        <li class="lvye">
+		        	<div class="layui-inline">
+			            <label for="counts_min">完成次数:</label>
+			            <div class="layui-input-inline" style="max-width: 190px;width:25% ">
+					        <input type="number" name="counts_min" id="counts_min" autocomplete="off" class="layui-input counts">
+				        </div>
+				        <div class="layui-form-mid">-</div>
+				        <div class="layui-input-inline" style="max-width: 190px;width:25%">
+				        	<input type="number" name="counts_max" id="counts_max" autocomplete="off" class="layui-input counts">
+				        </div>
+			        </div>
+		        </li>
+		    </ul>
+		</div>
+	</form>
+    <p style="padding: 0 20px;text-align: right;">
+        <button class="layui-btn" id="search">搜索</button>
+        <button class="layui-btn" id="export">导出</button>
+    </p>
+	<form class="layui-form" action="">
+	   	<div class="layui-input-block" id="showType" >
+	        <input type="radio" lay-filter="radioFilter" name="showType" value="1" title="按天显示" checked="">
+	        <input type="radio" lay-filter="radioFilter" name="showType" value="2" title="按月显示">
+	        <input type="radio" lay-filter="radioFilter" name="showType" value="3" title="汇总显示">
+	   	</div>
+	</form>
+	<div class="layui-tab-content">
+	    <div class="layui-tab-item layui-show">
+	    	<div id="sex-container"></div>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<div id="age-container"></div>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<div id="orgin-container"></div>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<div id="doctor-container"></div>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<div id="disease-container"></div>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<table class="layui-table" id="family">
+	            <colgroup>
+	                <col width="300">
+	                <col>
+	                <col width="300">
+	                <col width="300">
+	                <col width="300">
+	            </colgroup>
+	            <thead>
+	            <tr>
+	                <th>签约时间</th>
+	                <th>签约机构</th>
+	                <th>签约医生</th>
+	                <th>签约家庭数</th>
+	                <th>明细数据</th>
+	            </tr>
+	            </thead>
+	            <tbody>
+	            </tbody>
+	        </table>
+	        <div id="family-pagging"></div>
+	    </div>
+	    <div class="layui-tab-item">
+	    	<table class="layui-table" id="lvyue">
+	            <colgroup>
+	                <col width="300">
+	                <col width="300">
+	                <col>
+	                <col width="300">
+	            </colgroup>
+	            <thead>
+	            <tr>
+	                <th>签约账号</th>
+	                <th>签约人</th>
+	                <th>签约服务</th>
+	                <th>完成次数</th>
+	            </tr>
+	            </thead>
+	            <tbody>
+	            </tbody>
+	        </table>
+	        <div id="lvyue-pagging"></div>
+	    </div>
+	</div>
+	<!-- 家庭组详细 -->
+	<div id="labels" style="display: none;padding: 10px;">
+		<div class="layui-form">
+			<div class="layui-inline">
+				<label class="layui-form-label">主签约帐号:</label>
+		      	<div class="layui-input-inline">
+		        		<input type="text" placeholder="请输入主签约帐号" class="layui-input" id="mainNumber"/>
+		      	</div>
+		    </div>
+			<div class="layui-inline">
+				<label class="layui-form-label">主签约人:</label>
+		      	<div class="layui-input-inline">
+		        		<input type="text" placeholder="请输入主签约人" class="layui-input" id="mainPeople"/>
+		      	</div>
+	        </div>
+			<div class="layui-inline">
+		        	<button class="layui-btn" id="family-search">搜索</button>
+	        </div>
+		</div>
+		<table class="layui-table" id="family-detile">
+            <colgroup>
+                <col width="200">
+                <col width="200">
+                <col>
+            </colgroup>
+            <thead>
+	            <tr>
+	                <th>主签约帐号</th>
+	                <th>主签约人</th>
+	                <th>家庭组成员</th>
+	            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="family-detile-pagging"></div>
+		</div>
+	</div>
+</div>
+<script src="/js/jquery-2.1.1.min.js" charset="utf-8"></script>
+<script src="/js/jquery-json.js" charset="utf-8"></script>
+<script src="/js/tool.js"></script>
+<script src="../../js/highcharts.js"></script>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script src="/js/data/statistics.js" charset="utf-8"></script>
+</body>
+</html>

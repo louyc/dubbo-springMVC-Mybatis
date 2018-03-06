@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>新增私人定制</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <style type="text/css">
+    	.imgBox, #upload{
+	    	width: 100px;
+		    height: 100px;
+		    overflow: hidden;
+    	}
+    	.imgBox{
+			position:relative;
+		    background: url(../../image/uploadIcon.png) no-repeat center center;
+		    background-size: 60%;
+		    border:1px solid #ccc;
+		}
+		.imgBox,#upload{
+			width:100px;
+			height:100px;
+			overflow:hidden;
+		}
+		.imgBox img{
+			width:100%;
+			height:100%;
+		}
+		#upload{
+			position:absolute;
+			left:0;
+			top:0;
+			opacity:0;
+			filter=alpha(opacity=0);
+		}
+    </style>
+</head>
+<body>
+<div class="layui-form">
+	<div class="layui-form-item">
+		<label class="layui-form-label">申请类型:</label>
+		<div class="layui-input-block">
+			<select name="serviceType" id="applyType" lay-filter="applyType">
+				<option value="">请选择</option>
+				<option value="1">个人设置</option>
+				<option value="2">企业设置</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">图片:</label>
+		<div class="layui-input-block">
+			<div class="imgBox">
+				<img src="" alt="" />
+			</div>
+			<form id="uploadFile">
+				<input type="file" name="file" id="upload" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" />
+			</form>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">标题:</label>
+		<div class="layui-input-block">
+			<input type="text" autocomplete="off" placeholder="请输入标题" class="layui-input " id="title">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">介绍:</label>
+		<div class="layui-input-block">
+			<input type="text" autocomplete="off" placeholder="请输入介绍" class="layui-input " id="introduce">
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">内容:</label>
+		<div class="layui-input-block">
+			<script id="container" name="content" type="text/plain"></script>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">显示顺序:</label>
+		<div class="layui-input-block">
+			<input type="text" autocomplete="off" placeholder="请输入显示顺序" class="layui-input " id="displayOrder">
+		</div>
+	</div>
+	<div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="submit" lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="../../js/tool.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+<script>
+//实例化编辑器 
+var ue = UE.getEditor('container',{
+ 	autoHeightEnabled: true,
+    autoFloatEnabled: true,
+    initialFrameWidth: 480,
+    initialFrameHeight:200,
+    elementPathEnabled:false
+})
+</script>
+<script src="../../js/backstage/addPersonalSet.js" charset="utf-8"></script>
+</body>
+</html>

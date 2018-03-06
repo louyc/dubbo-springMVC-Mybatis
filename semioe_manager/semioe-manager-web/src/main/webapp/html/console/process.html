@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>流程工具</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <div class="layui-form">
+        <ul>
+            <li>
+                <label for="vender">流程名称：</label>
+                <input type="text" class="layui-input" id="goodsName"/>
+            </li>
+        </ul>
+        <p>
+        	<button class="layui-btn " id="search">搜索</button>
+        	<button class="layui-btn " id="add">新增</button>
+       	</p>
+        </div>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%">
+            <colgroup>
+	            <col width="100">
+	            <col width="">
+	            <col width="200">
+	            <col width="150">
+            </colgroup>
+            <thead>
+            	<tr>
+            		<th>序号</th>
+            		<th>流程名称</th>
+            		<th>创建时间</th>
+            		<th>操作</th>
+            	</tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/tool.js" charset="utf-8"></script>
+<script type="text/javascript">
+	layui.use(['element', 'form', 'layer', 'jquery','laypage'], function() {
+		var $ = layui.jquery,form = layui.form(),element = layui.element();
+		var layer = layui.layer,laypage = layui.laypage;
+		//获取页面tooken
+		var token = window.utils.getCookie('token');
+		var host = 'workflow-doctor.semioe.com';
+		if(window.location.host == 'cs.semioe.com'){
+			host = 's-workflow.semioe.com';
+		}
+		getData("",1,10);
+		function getData(title,pageNum,pageSize){
+			$.ajax({
+		    	url:'/procedures/getProceduresByToken?title='+title+'&token='+token+'&pageNumber='+pageNum+'&pageSize='+pageSize,
+		        type:'POST',
+		        success : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	if(data.successful){
+		        		var html="";
+		        		if(data.lenght<=0){
+							layer.msg("暂无数据！");
+							return;
+		        		}
+		        		$.each(data.items,function(index,item){
+		        			html+='<tr><td>'+(index+1)+'</td>';
+		        			var title = item.title?item.title:"";
+		        			html+='<td>'+title+'</td>';
+		        			var created_at = item.created_at?item.created_at:"";
+		        			html+='<td>'+created_at+'</td>';
+		        			html+='<td><input type="hidden" value="'+item.id+'"><button class="layui-btn layui-btn-small revise">修改</button></td>';
+		        			html+='</tr>'
+		        		})
+		        		$("table tbody").html(html);
+		        		form.render();
+		        		$(".revise").click(function(){
+		        			var id=$(this).prev("input").val();
+		        			window.open(encodeURI('http://'+host+'/procedure/update?id='+id+'&token='+token));
+		        		})
+		        	}else{
+		        		layer.msg(data.resultCode.message);
+		        	}
+		        },
+		        error : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	layer.msg('加载失败！');
+		        }
+		    });
+		}
+		//分页
+	    pagging();
+	    function pagging(){
+	    	layer.open({type: 3,content: ""});
+	    	var title = $("#goodsName").val();
+		    $.ajax({
+		    	url:'/procedures/getProceduresByToken?title='+title+'&token='+token,
+		        type:'POST',
+		        success : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	var pageSum = data.totalItemsCount;
+		        	laypage({
+		        		cont: 'pagging'
+	        			, pages: Math.ceil(pageSum/10)
+	        			, skip: false
+	        			,jump: function(obj, first){
+	        				layer.open({type: 3,content: ""});
+	        				//得到了当前页，用于向服务端请求对应数据
+	        				pageNum = obj.curr;
+	        				getData(title,pageNum,10);
+	        			}
+		        	});
+		        },
+		        error : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	layer.msg('失败！');
+		        },
+		    });
+	    	
+	    }
+		$("#add").on("click",function(){
+			window.open(encodeURI('http://'+host+'/procedure/create?title=&token='+token));
+		});
+		$("#search").on("click",function(){
+			pagging();
+		})
+	});	
+</script>
+</body>
+</html>

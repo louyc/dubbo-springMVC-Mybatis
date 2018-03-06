@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>消息通知</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <style>
+        /* 
+        .tab-title {
+            text-align: center;
+            border:none;
+        } */
+         /* .layui-show p a{
+            color:blue;
+        }
+       .examine{
+       		font-size:14px;
+       		padding-left:30px;
+       } */
+        .layui-tab-content{
+        	margin-top:10px;
+        }
+        .layui-this h2{
+            font-size: 14px;
+        }
+		 .layui-message{
+        	width:90%;
+        }
+        .layui-list{
+        	width:100%:
+        	position: relative;
+        }
+        .layui-list p{
+            height:60px;
+            line-height: 60px;
+            width:100%;
+            font-size: 14px;
+            margin-bottom:10px;
+            background-color:#eee;
+        	border-radius:5px;
+        	padding-left:15px;
+        }
+        .layui-show p span{
+            position: absolute;
+            right:120px;
+            font-weight: normal;
+            color:#000011;
+            font-size:12px;
+        }
+       .tixing{
+       		font-size:14px;
+       }
+    </style>
+</head>
+<body>
+<div class="layui-main">
+    <div class="layui-tab layui-tab-brief info-box" lay-filter="docDemoTabBrief">
+        <ul class="layui-tab-title tab-title">
+            <li class="layui-this"><h2>用户异常提醒</h2></li>
+            <li><h2>系统通知</h2></li>
+        </ul>
+        <div class="layui-tab-content" style="height: 100px;">
+            <div class="layui-tab-item layui-show tab-first">
+              	<p class='tixing'>工程师正在努力开发中，尽请稍后！</p>
+            </div>
+            <div class="layui-tab-item layui-message">
+            	<div class="layui-list">
+            		<p>您提交的个人专业审核未通过。<a href="javascript:;">请重新提交</a></p>
+                	<p>未通过原因：医师执业证书照片不清晰。<span>16:33</span></p>
+            	</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-json.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="../../js/template.js"></script>
+<script src="../../js/console/newsInform.js"></script>
+</body>
+</html>  

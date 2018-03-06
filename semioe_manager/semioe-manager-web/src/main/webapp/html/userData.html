@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>后台用户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/listStyle.css">
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+   <div class="my-tab-select">
+	    <ul class="layui-form">
+	    		<li>
+	            <label for="userMobile">用户手机</label>
+		       	<div>
+			      	<input type="text" autocomplete="off" class="layui-input" id="userMobile">
+			    </div>
+		    </li>
+		    <li>
+	            <label for="userName">用户名称</label>
+		       	<div>
+			      	<input type="text" autocomplete="off" class="layui-input" id="userName">
+			    </div>
+		    </li>
+     	</ul>
+	    	<p>
+            <button class="layui-btn" id="search">搜索</button>
+	    	</p>
+    </div>
+    <table id="userList" class="layui-table list-table" >
+        <colgroup>
+            <col >
+            <col >
+            <col >
+        </colgroup>
+        <thead>
+        <tr>
+            <th>用户手机</th>
+            <th>用户名称</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="pagging"></div>
+    <!-- 数据详情 -->
+    <div id="dataDetail" style="display: none">
+     	<h3 class="dataTit">用户名称：<span class="username"></span>性别：<span class="usersex"></span>年龄：<span class="userage"></span></h3>
+	    <div class="layui-form search-box">
+	    		<ul>
+		    		<li>
+				     项目名称：
+				     <div class="layui-inline search-input">
+					     <select id="dataType">
+					     	<option  value="all">请选择项目名称</option>
+					     </select>
+				     </div>
+			    </li>
+		    		<li>
+			      	测量时间：<input type="text" name="date" id="startTime" placeholder="年/月/日" autocomplete="off" class="search-input">
+					至
+					<input type="text" name="date" id="endTime" placeholder="年/月/日" autocomplete="off" class="search-input">
+			    </li>
+		    </ul>
+		    <p style="text-align: right; margin:10px;">
+		    		<button class="layui-btn" id="d-search">搜索</button>
+		    </p>
+     	</div>
+	    <div class="table-list">
+			<table class="layui-table list-table">
+		        <colgroup>
+		            <col >
+		            <col >
+		            <col >
+		        </colgroup>
+		        <thead>
+			        <tr>
+			            <th>项目名称</th>
+			            <th>数值</th>
+			            <!-- <th>单位</th> -->
+			           <!--  <th>参考意见</th> -->
+			            <th>测量时间</th>
+			        </tr>
+		        </thead>
+		        <tbody>
+		        </tbody>
+		    </table>
+		    <div id="pageBox" style="text-align: center;"></div>
+		</div>
+    </div>
+</div>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="/js/tool.js"></script>
+<script>
+$(function(){
+	layui.use(['laypage', 'layer','form','laydate'], function () {
+        var $ = layui.jquery;
+        var laypage = layui.laypage, layer = layui.layer, laydate = layui.laydate, form = layui.form();
+        
+        $('#search').click(function(){
+        		getDataList();
+        }) 
+        getDataList();
+        //获取数据列表
+	    	function getDataList(pageNum){
+	    		var name = $.trim($('#userName').val());
+	    		var mobile = $.trim($('#userMobile').val());
+	    		pageNum = pageNum || 1;
+	    		var pagesize = 10,userId = window.utils.getCookie('user_id');
+	    		var query = '?pageSize='+pagesize+'&currentsPage='+pageNum+'&name='+name+'&mobile='+mobile+'&managerId='+userId
+	    		$.ajax({
+	    			url:'/deviceData/getAllDeviceBindingUser'+query,
+	    			type:'GET',
+	    			success:function(res){
+	    				var str = '';
+	    				if(res.successful && res.resultCode.code == 'SUCCESS'){
+	    					if(res.items && res.items.length > 0){
+	    						$.each(res.items,function(index,item){
+	    							str += '<tr userId="'+item.deviceLocationId+'"><td>'+(item.mobile?item.mobile:'')+'</td><td>'+(item.name?item.name:'')+'</td><td><button class="layui-btn view-detail">查看详情</button></td></tr>';
+	    						})
+	    					}else{
+	    						str += '<tr><td colspan="3">暂无数据</td></tr>'
+	    					}
+	    				}else{
+	    					console.log(res.resultCode.message);
+	    					str += '<tr><td colspan="3">列表获取失败</td></tr>'
+	    				}
+	    				$('#userList tbody').html(str);
+	    				laypage({
+				        cont: 'pagging'
+				    		, pages: res.pagesCount
+				        , curr: res.pageNumber||1
+				        ,jump: function(obj, first){
+					        	if(!first){
+					            pageNum = obj.curr;
+					            getDataList(pageNum);
+				            }
+				        }
+				    });
+	    			},
+                error:function(error){
+                    console.error(error)
+                    $('#userList tbody').html('<tr><td colspan="3">列表获取失败</td></tr>');
+                }
+	    		})
+	    	}
+	    	$('#userList').delegate('.view-detail','click',function(){
+	    		var userId = $(this).parents('tr').attr('userId');
+	    		$('#dataDetail').attr('userId',userId);
+	    		layer.open({
+	    			type: 1
+	    			,title:'数据详情'
+	    			,content: $('#dataDetail')
+	    			,area: ['680px','450px']
+	    			,btn: []
+	    			,btnAlign: 'c'
+	    			,yes: function(index, layero){
+	    				 
+	    			 }
+	    		});
+	    		getItems();
+	    		getDetail();
+	    	})
+	    	//获取项目名称列表
+	    	function getItems(){
+	    		$.get('/deviceData/queryDeviceItems',function(res){
+	    			if(res.successful){
+	    				var option = '';
+	    				$.each(res.data,function(index,item){
+	    					option += '<option value="'+item.deviceItemId+'">'+(item.deviceItemName).replace(/\"/g,'')+'</option>'
+	    				})
+	    				$('#dataType').html('<option  value="all">请选择项目名称</option>').append(option);
+	    				form.render('select');
+	    			}else{
+	    				layer.msg('检测项目获取失败！');
+	    			}
+	    		})
+	    	}
+	    	var start = {
+	    	    min: '1900-01-01 00:00:00'
+	    	    ,max: '2099-06-16 23:59:59'
+		    	,format: 'YYYY-MM-DD hh:mm:ss'
+	    	    ,istoday: true
+	    	    ,choose: function(datas){
+	    	      end.min = datas; //开始日选好后，重置结束日的最小日期
+	    	      end.start = datas //将结束日的初始值设定为开始日
+	    	    }
+        };
+        	  
+	    	var end = {
+	    	    min: '1900-01-01 00:00:00'
+	    	    ,max: '2099-06-16 23:59:59'
+	    	    ,format: 'YYYY-MM-DD hh:mm:ss'
+	    	    ,istoday: true
+	    	    ,choose: function(datas){
+	    	      start.max = datas; //结束日选好后，重置开始日的最大日期
+	    	    }
+	    	};
+	    $('#startTime').click(function(){
+		    start.elem = this;
+		    laydate(start);
+	    	})
+	    	$('#endTime').click(function(){
+			    end.elem = this
+			    laydate(end);
+	    	})
+	 	$('#d-search').click(function(){
+	 		getDetail();
+	    }) 
+	    var dataAry = [
+						{name:"urine_VitC",value:"维生素C",unit:''},
+			            {name:"urine_leukocytes",value:"白细胞",unit:''},
+			            {name:"urine_bilirubin",value:"胆红素",unit:''},
+			            {name:"urobilinogen",value:"尿胆原",unit:''},
+			            {name:"urine_glucose",value:"葡萄糖",unit:''},
+			            {name:"urine_specific_gravity",value:"比重",unit:''},
+			            {name:"urine_protein",value:"蛋白质",unit:''},
+			            {name:"urine_ketone",value:"酮体",unit:''},
+			            {name:"urine_occult_blood",value:"潜血",unit:''},
+			            {name:"urine_nitrite",value:"亚硝酸盐",unit:''},
+			            {name:"urine_PH",value:"酸碱度",unit:''},
+			            {name:"degreased_body_weight",value:"去脂体重",unit:'kg'},
+			            {name:"protein_weight",value:"蛋白质重量",unit:'kg'},
+			            {name:"health_score",value:"健康评分",unit:''},
+			            {name:"water_percentage",value:"水分比",unit:'%'},
+			            {name:"weight",value:"体重",unit:'kg'},
+			            {name:"fat_control",value:"脂肪控制量",unit:'kg'},
+			            {name:"basic_metabolism_rate",value:"基础代谢率",unit:'Kcal/d'},
+			            {name:"fat_content",value:"脂肪",unit:'kg'},
+			            {name:"bone_weight",value:"骨质重",unit:'kg'},
+			            {name:"body_type",value:"身体类型",unit:'kg'},
+			            {name:"visceral_fat_index",value:"内脏脂肪指数",unit:''},
+			            {name:"fat_level",value:"肥胖等级",unit:''},
+			            {name:"muscle_content",value:"肌肉",unit:'kg'},
+			            {name:"weight_control",value:"体重控制量",unit:'kg'},
+			            {name:"standard_weight",value:"标准体重",unit:'kg'},
+			            {name:"muscle_control",value:"肌肉控制量",unit:'kg'},
+			            {name:"height",value:"身高",unit:'cm'},
+			            {name:"BMI",value:"健康指数",unit:''},
+				    		{name:"body_fat_percentage",value:"体脂百分比",unit:'%'},
+				    		{name:"HDL",value:"高密度蛋白胆固醇",unit:'mmol/L'},
+				    		{name:"CE",value:"总胆固醇与高密度脂蛋白比值",unit:''},
+				    		{name:"TG",value:"甘油三酯",unit:'mmol/L'},
+				    		{name:"LDL",value:"低密度脂蛋白胆固醇",unit:'mmol/L'},
+				    		{name:"chol",value:"总胆固醇",unit:'mmol/L'},
+				    		{name:"hct",value:"红细胞比容",unit:'%'},
+				    		{name:"hb",value:"血红蛋白",unit:'g/dL'},
+				    		{name:"ECG_t_axis",value:"t_axis",unit:'degree'},
+				    		{name:"ECG_sv1",value:"sv1",unit:'uV'},
+				    		{name:"ECG_qtc",value:"qtc",unit:'ms'},
+				    		{name:"ECG_rv5",value:"rv5",unit:'uV'},
+				    		{name:"ECG_qrs",value:"qrs",unit:'ms'},
+				    		{name:"ECG_rv5_svl",value:"rv5_svl",unit:'uV'},
+				    		{name:"ECG_p_r",value:"p_r",unit:'ms'},
+				    		{name:"ECG_qrs_axis",value:"qrs_axis",unit:'degree'},
+				    		{name:"ECG_rr",value:"rr",unit:'ms'},
+				    		{name:"ECG_qt",value:"qt",unit:'ms'},
+				    		{name:"ECG_p_axis",value:"p_axis",unit:'degree'},
+				    		{name:"heart_rate",value:"心率",unit:'bpm'}
+				   ]
+	    	//获取数据详情列表
+	    function  getDetail(pageNum){
+	    		var dataItemId = $('#dataType').val();
+    			var dataType = dataItemId == 'all' ? '' : dataItemId;
+	    		var startTime = $('#startTime').val();
+	    		var endTime = $('#endTime').val();
+	    		pageNum = pageNum || 1;
+	    		var pagesize = 5, userId = $('#dataDetail').attr('userId');;
+	    		var query = '?pageSize='+pagesize+'&currentsPage='+pageNum+'&dataType='+dataType+'&startTime='+startTime+'&endTime='+endTime+'&managerId='+userId
+	    		$.ajax({
+	    			url:'/deviceData/queryUserInfo'+query,
+	    			type:'GET',
+	    			success:function(res){
+		    			var str = '';
+	    				if(res.successful && res.resultCode.code == 'SUCCESS'){
+	    					if(res.items && res.items.length > 0){
+	    						var data = res.items[0],age = data.age, sex = data.sex;
+	    						age = age?age:'无';
+	    						sex = sex == 0 ? '保密' :(sex == 1 ? '男' : (sex == 2 ? '女' : '无'));
+	    						$('#dataDetail .username').text(data.name?data.name:'无');
+	    						$('#dataDetail .usersex').text(sex);
+	    						$('#dataDetail .userage').text(age);
+	    						$.each(res.items,function(index,item){
+	    							var itemData = eval("("+item.dataValue+")");
+	    							var d_value = itemData.value ? itemData.value : (itemData.wp ? itemData.wp : '');
+	    							if(item.dataType == 'BODY'){
+	    								d_value = eval("("+item.dataValue+")");
+	    								itemData.name = '体脂秤';
+	    								itemData.date = window.utils.simpleDateFormat(item.createTime,'yyyy-MM-dd HH:mm:ss');
+	    							}
+	    							else if(item.dataType == 'BF'){
+	    								d_value = eval("("+item.dataValue+")");
+	    								delete d_value.date; delete d_value.dataType; delete d_value.name; delete d_value.units;
+	    								itemData.name = '血脂五项';
+	    								itemData.date = window.utils.simpleDateFormat(item.createTime,'yyyy-MM-dd HH:mm:ss');
+	    							}
+	    							else if(item.dataType == 'BHB'){
+	    								d_value = eval("("+item.dataValue+")");
+	    								delete d_value.date; delete d_value.dataType; delete d_value.name; delete d_value.units;
+	    								itemData.name = '血红蛋白';
+	    								itemData.date = window.utils.simpleDateFormat(item.createTime,'yyyy-MM-dd HH:mm:ss');
+    								}
+	    							if(window.utils.isObj(d_value)){
+	    								var val1 = '';
+	    								for(var val in d_value){
+	    									$.each(dataAry,function(index,itemVal){
+	    										if(itemVal.name == val){
+	    											val1 += '<p>'+itemVal.value+': '+d_value[val]+''+itemVal.unit+'</p>';
+	    										}
+	    									})
+	    								}
+	    								d_value = val1;
+	    							}else{
+	    								d_value = d_value+''+itemData.units;
+	    							}
+	    							str += '<tr><td>'+itemData.name+'</td><td>'+d_value+'</td><td>'+itemData.date+'</td></tr>';
+	    						})
+	    					}else{
+	    						str += '<tr><td colspan="3">暂无数据</td></tr>'
+	    					}
+	    				}else{
+	    					console.log(res.resultCode.message);
+	    					str += '<tr><td colspan="3">列表获取失败</td></tr>'
+	    				}
+	    				$('#dataDetail tbody').html(str);
+	    				laypage({
+				        cont: 'pageBox'
+				    		, pages: res.pagesCount
+				        , curr: res.pageNumber||1
+				        ,jump: function(obj, first){
+					        	if(!first){
+					            pageNum = obj.curr;
+					            getDetail(pageNum);
+				            }
+				        }
+				    });
+	    			},
+                error:function(error){
+                    console.error(error)
+                    $('#dataDetail tbody').html('<tr><td colspan="5">列表获取失败</td></tr>');
+                }
+	    		})
+    		}
+	})
+})
+</script>
+</body>
+</html >

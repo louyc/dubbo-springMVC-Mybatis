@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>私人定制消息</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <style>
+    	.fenge{margin: 0 10px;display: inline-block;}
+    	td a{cursor: pointer;}
+    </style>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <div class="layui-form">
+        <ul>
+            <li>
+                <label for="vender">申请类型：</label>
+                <select name="applyType" id="applyType" lay-filter="applyType">
+	                <option value="all">全部</option>
+	                <option value="1">个人申请</option>
+	                <option value="2">企业申请</option>
+	            </select>
+            </li>
+            <li>
+                <label for="userName">用户：</label>
+                <input type="text" class="layui-input" id="userName"/>
+            </li>
+            <li>
+                <label for="title">标题：</label>
+                <input type="text" class="layui-input" id="title"/>
+            </li>
+            <li>
+                <label for="ifRead">是否已读：</label>
+                <select name="ifRead" id="ifRead" lay-filter="ifRead">
+	                <option value="all">全部</option>
+	                <option value="1">是</option>
+	                <option value="0">否</option>
+	            </select>
+            </li>
+            <!-- <li>
+                <label for="ifDone">是否处理：</label>
+                <select name="ifDone" id="ifDone" lay-filter="ifHandle">
+	                <option value="all">全部</option>
+	                <option value="1">是</option>
+	                <option value="0">否</option>
+	            </select>
+            </li> -->
+        </ul>
+        <p>
+        	<button class="layui-btn " id="search">搜索</button>
+       	</p>
+        </div>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%">
+            <colgroup>
+	            <col width="100">
+	            <col width="">
+	            <col width="200">
+	            <col width="200">
+	            <col width="150">
+            </colgroup>
+            <thead>
+            	<tr>
+            		<th>申请类型</th>
+            		<th>标题</th>
+            		<th>用户名称</th>
+            		<th>联系方式</th>
+            		<th>操作</th>
+            	</tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/tool.js" charset="utf-8"></script>
+<script type="text/javascript">
+	layui.use(['element', 'form', 'layer', 'jquery','laypage'], function() {
+		var $ = layui.jquery,form = layui.form(),element = layui.element();
+		var layer = layui.layer,laypage = layui.laypage;
+		
+		function getData(pageNumber,pageSize){
+			var applyType=$("#applyType").val()=="all"?"":$("#applyType").val();
+			var userName = $("#userName").val();
+			var title = $("#title").val();
+			var ifRead = $("#ifRead").val()=="all"?"":$("#ifRead").val();
+			var ifDone = "";
+			var data = {applyType:applyType,name:userName,title:title,isRead:ifRead,isHandle:ifDone,pageSize:10,currentPage :pageNumber};
+			
+			$.ajax({
+		    	url:'/ptmessage/query',
+		        type:'POST',
+		        data: data,
+		        dataType:"json",
+		        success : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	if(data.successful){
+		        		var html="";
+		        		if(data.lenght<=0){
+							layer.msg("暂无数据！");
+							return;
+		        		}
+		        		$.each(data.items,function(index,item){
+		        			var applyType = item.applyType;
+		        			if(applyType==2){
+		        				applyType = "企业申请"
+		        			}else{
+		        				applyType = "个人申请"
+		        			}
+		        			html+='<tr><td>'+applyType+'</td>';
+		        			var title = item.title?item.title:"";
+		        			html+='<td>'+title+'</td>';
+		        			var name = item.name?item.name:"";
+		        			html+='<td>'+name+'</td>';
+		        			var mobile = item.mobile?item.mobile:"";
+		        			html+='<td>'+mobile+'</td>';
+		        			html+='<td><input type="hidden" value="'+item.id+'">';
+		        			var isRead = item.isRead;
+		        			if(isRead!=null &&isRead &&isRead==1){
+		        				html+='<a>已读</a>';
+		        			}else{
+		        				html+='<a data-id="'+item.id+'" style="color:red;" class="unready">未读</a>';
+		        			}
+		        			html+='</td></tr>';
+		        		})
+		        		$("table tbody").html(html);
+		        		$(".unready").on("click",function(){
+		        			var id = $(this).attr("data-id");
+		        			$.ajax({
+		        		    	url:'/ptmessage/read',
+		        		        type:'POST',
+		        		        data: {id:id},
+		        		        dataType:"json",
+		        		        success : function(data){
+		        		        	pagging();
+			        			},
+			    		        error : function(data){
+			    		        	layer.close(layer.index);//取消遮罩
+			    		        	layer.msg('失败！');
+			    		        }
+		        			});
+		        		});
+		        		form.render();
+		        		$(".revise").click(function(){
+		        			var id=$(this).prev("input").val();
+		        			window.open(encodeURI('http://'+host+'/procedure/update?id='+id+'&token='+token));
+		        		})
+		        	}else{
+		        		layer.msg(data.resultCode.message);
+		        	}
+		        },
+		        error : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	layer.msg('加载失败！');
+		        }
+		    });
+		}
+		//分页
+	    pagging();
+	    function pagging(){
+	    	layer.open({type: 3,content: ""});
+	    	var applyType=$("#applyType").val()=="all"?"":$("#applyType").val();
+			var userName = $("#userName").val();
+			var title = $("#title").val();
+			var ifRead = $("#ifRead").val()=="all"?"":$("#ifRead").val();;
+			var ifDone = $("#ifDone").val()=="all"?"":$("#ifDone").val();;
+			var data = {applyType:applyType,name:userName,title:title,isRead:ifRead,isHandle:ifDone,pageSize:10,currentPage:1000};
+		    $.ajax({
+		    	url:'/ptmessage/query',
+		        type:'POST',
+		        data: data,
+		        dataType:"json",
+		        success : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	var pageSum = data.items.length;
+		        	laypage({
+		        		cont: 'pagging'
+	        			, pages: Math.ceil(pageSum/10)
+	        			, skip: false
+	        			,jump: function(obj, first){
+	        				layer.open({type: 3,content: ""});
+	        				//得到了当前页，用于向服务端请求对应数据
+	        				pageNum = obj.curr;
+	        				getData(pageNum,10);
+	        			}
+		        	});
+		        },
+		        error : function(data){
+		        	layer.close(layer.index);//取消遮罩
+		        	layer.msg('失败！');
+		        },
+		    });
+	    	
+	    }
+	    //搜索
+	    $("#search").on("click",function(){
+	    	pagging();
+	    })
+	});	
+</script>
+</body>
+</html>

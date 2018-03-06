@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>后台用户管理</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../layui/css/layui.css" media="all">
+    <style>
+    	#addUser,#userAudit{display:none;}
+    	#LAY_demo{max-height: 350px;}
+    	#userAudit .layui-form-item{margin-top:20px;}
+    	#addUser .layui-input-block{width:300px;}
+    	/* #userList th,#userList td,#pagging{text-align: center;} */
+    	.tips{width:100%; height:40px; line-height:40px; text-align:center; color:red;}
+    	#pagging{display:none}
+    	.reviseStock{
+			display:inline-block;
+			width:22px;
+			height:22px;
+			background:url(../image/editIcon.png) no-repeat center center;
+			background-size: cover;
+		    margin-left: 5px;
+		    vertical-align: top;
+		    cursor: pointer;
+		    float: right;
+		}
+    	.opa0{display:inline-block;width:70px;height:40px;opacity:0;filter:alpha(opacity=0); margin-right:-70px;position:relative;z-index: 99;}
+    </style>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+   <div class="my-tab-select">
+	    <ul class="layui-form">
+	    		<li>
+	            <label for="goodsName">姓名</label>
+		       	<div>
+			      	<input type="text" autocomplete="off" class="layui-input" id="searchName">
+			    </div>
+		    </li>
+		    <li>
+	            <label for="searchPhone">手机号</label>
+		       	<div>
+			      	<input type="text" autocomplete="off" class="layui-input" id="searchPhone">
+			    </div>
+		    </li>
+	     	<li>
+			    	<div>
+			    		<label class="layui-form-label">用户角色</label>
+		            	<select name="role" id="s-role" lay-filter="search-role">
+		            		<option value="all">请选择用户角色</option>
+		            </select>
+	            </div>
+		    	</li>
+		    	<li>
+			    	<div>
+			    		<label class="layui-form-label">审核状态</label>
+		            	<select name="search-audit-status" id="search-audit-status" lay-filter="search-audit-status">
+		                 <option value="all">请选择审核状态</option>
+		                 <option value="0">未完善资料</option>
+		                 <option value="1">审核通过</option>
+		                 <option value="2">待审核</option>
+		                 <option value="3">驳回申请</option>
+		                 <option value="4">禁用</option>
+		              </select>
+		            </div>
+		    	</li>
+	    	  	<li>
+			    	<div>
+			    		<label class="layui-form-label">是否可用</label>
+		            <select name="search-is-use" id="search-is-use" lay-filter="search-is-use">
+		                 <option value="all">请选择是否可用</option>
+		                 <option value="1">是</option>
+		                 <option value="0">否</option>
+		             </select>
+	            </div>
+		    	</li>
+	    	</ul>
+	    	<p>
+            	<button class="layui-btn" id="search">搜索</button>
+	    		<button class="layui-btn" id="addBtn">添加</button>
+	    		<a class="layui-btn layui-btn-normal" href="javascript:;" id="exportBtn">导出</a>
+	    	</p>
+    </div>
+    <table id="userList" class="layui-table" lay-even >
+        <colgroup>
+            <col >
+            <col >
+            <!-- <col width=""> -->
+            <!-- <col width=""> -->
+            <col >
+            <col >
+            <col >
+            <col >
+            <col width="300px">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>姓名</th>
+            <th>手机号</th>
+            <!-- <th>描述</th> -->
+            <!-- <th>地址</th> -->
+            <th>角色</th>
+            <th>标签</th>
+            <th>审核状态 </th>
+            <th>是否可用</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="addUser">
+	    <form class="layui-form">
+	     	<div class="tips">新添加用户初始密码为：000000</div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">姓名<span>*</span></label>
+	            <div class="layui-input-block">
+	                <input type="text" autocomplete="off" placeholder="请输入姓名" class="layui-input" id="userName">
+	            </div>
+	        </div>
+	        <div class="layui-form-item modifyNone">
+	            <label class="layui-form-label">手机号<span>*</span></label>
+	            <div class="layui-input-block">
+	                <input type="text" autocomplete="off" placeholder="请输入手机号" class="layui-input" id="userPhone">
+	            </div>
+	        </div>
+	        <div class="layui-form-item modifyNone">
+	            <label class="layui-form-label">邮箱<span>*</span></label>
+	            <div class="layui-input-block">
+	                <input type="text" autocomplete="off" placeholder="请输入邮箱地址" class="layui-input" id="userEmail">
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label" >地址</label>
+	            <div class="layui-input-block">
+	                <input type="text" autocomplete="off" placeholder="请输入地址" class="layui-input" id="userAddress">
+	            </div>
+	        </div>
+	        <div class="layui-form-item role-item">
+	            <label class="layui-form-label">角色<span>*</span></label>
+	            <div class="layui-input-block">
+	                <select name="role" id="role" lay-filter="add-role">
+	                    <option value="all">请选择角色</option>
+	                </select>
+	            </div>
+	        </div>
+	        <!-- <div class="layui-form-item role-item">
+	            <label class="layui-form-label">标签<span>*</span></label>
+	            <div class="layui-input-block">
+	                <select name="tags" id="tags" lay-filter="tags">
+	                    <option value="all">请选择标签</option>
+	                </select>
+	            </div>
+	        </div> -->
+	        <!-- <div class="layui-form-item">
+	            <label class="layui-form-label">审核状态:</label>
+	            <div class="layui-input-block">
+	                <select name="audit-status" id="audit-status" lay-filter="add-audit-status">
+	                    <option value="all">请选择审核状态</option>
+	                    <option value="0">待审核</option>
+	                    <option value="1">审核完成</option>
+	                    <option value="2">驳回申请</option>
+	                    <option value="3">禁用</option>
+	                </select>
+	            </div>
+	        </div> -->
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">描述</label>
+	            <div class="layui-input-block">
+	                <textarea placeholder="请输入用户描述" class="layui-textarea" id="userDes"></textarea>
+	            </div>
+	        </div>
+	        <div class="layui-form-item">
+	            <label class="layui-form-label">是否可用:</label>
+	            <div class="layui-input-block">
+	                <input type="radio" name="is-use" value="1" title="是" checked>
+	                <input type="radio" name="is-use" value="0" title="否">
+	            </div>
+	        </div>
+	    </form>
+    </div>
+    <div id="suggestion" style="display: none;text-align: center;padding: 10px;">
+	    <textarea style="width: 100%;height: 200px;border: none;resize:none" id="auditMessage"></textarea>
+    </div>
+    <div id="labels" style="display: none;text-align: center;padding: 10px;">
+    	<div class="layui-form"></div>
+    </div>
+    <div id="pagging"></div>
+</div>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="/js/template.js"></script>
+<script src="/js/userManager.js"></script>
+</body>
+</html >

@@ -1,0 +1,93 @@
+.my-tab-select ul li .center_align{
+	text-align: center;
+}
+.layui-main .userCode{
+	line-height: 3;
+	font-size: 24px;
+	text-align: center;
+	border-bottom:1px solid;
+	position: relative;
+    margin-bottom: 20px;
+}
+.layui-main .userCode span{
+	float: right;
+	font-size: 14px;
+	margin-top: 25px;
+	margin-right: 20px;
+}
+.layui-main .my-tab-select ul li{
+	/* float: left; */
+	width: 33%;
+}
+.layui-main .my-tab-select ul li.half_width{
+	width: 49%;
+}
+.layui-main .my-tab-select ul.bottom-ul li{
+	float: left;
+}
+.layui-main .my-tab-select ul li span{
+	line-height: 38px;
+    display: inline-block;
+    min-width: 10px;
+}
+.layui-main .shuzhiString{
+	-webkit-writing-mode:horizontal-tb;
+	writing-mode:horizontal-tb;
+	font-size: 24px;
+	float: left;
+	width: 24px;
+	word-break:break-all;
+	word-wrap: break-word;
+	line-height: 2;
+	margin-left: 30px;
+}
+.layui-main .big_table{
+	border: 1px solid #ccc;
+}
+.layui-main .big_table .border_right{
+	border-right: 1px solid #ccc;
+}
+.layui-main .layui-table tr:hover, .layui-main .layui-table tr{
+    background-color: #fff!important;
+}
+.layui-main .two_table tr td{
+	width: 50%;
+}
+.layui-main .border_bottom{
+	border-bottom: 1px solid #ccc;
+}
+.layui-main .familyHistory_ul li{
+	width: 50%;
+	float: left;
+	line-height: 3;
+	text-indent: 15px;
+}
+.layui-main table tr td.big_item{
+	text-align: center;
+	width: 120px;
+}
+
+#serviceVerdict .layui-table tr:hover{
+	background-color: #fff!important;
+}
+#serviceVerdict textarea{
+	width: 100%;
+	border: none;
+}
+
+#dataInfo .userInfo{
+	line-height: 2;
+	font-size: 24px;
+	text-align: center;
+	margin-top: 5px;
+	margin-bottom: 15px;
+}
+#dataInfo .dataTit{
+	height:30px;
+	text-align:center;
+	font-size: 18px;
+	margin-top: 20px;
+}
+#dataInfo .dataTit span{
+	margin-right:40px;
+}

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <style>
+		#tipForm{
+			display: none;
+			padding:30px;
+		}
+		.detectionUL{
+			
+		}
+		.detectionLI{
+			font-size:0px;
+    		box-shadow: 0px 0px 1px #ccc;
+    		padding-left: 5px;
+		}
+		.detectionLI>div{
+			font-size:14px;
+			display: inline-block;
+			width:42%;
+		    height: 37px;
+		    line-height: 37px;
+		}
+		.detectionLI>div:first-child{
+			width:6%;
+    		vertical-align: bottom;
+			text-align:center;
+		}
+		.detectionLI>div:last-child{
+			width:6%;
+			text-align:center;
+		}
+		.detectionLI>div>label{
+			display: inline-block;
+		}
+		.detectionLI>div>input{
+			height: 30px;
+    		width: 78%;
+		    line-height: 38px;
+		    line-height: 36px\9;
+		    border: 1px solid #e6e6e6;
+		    background-color: #fff;
+		    border-radius: 2px;
+		}
+		.detectionLI>div>i{
+			width:28px;
+			height:28px;
+			vertical-align: middle;
+			background-size: contain;
+		}
+		.add_icon{
+			display: inline-block;
+			background-image:url('/image/add-icon.png');
+		}
+		.minus_icon{
+			display: inline-block;
+			background-image:url('/image/minus-icon.png');
+		}
+		.null_icon{display: inline-block;}
+    </style>
+</head>
+<body>
+	<div class="layui-main" style="width: auto">
+	    <div class="my-tab-select">
+	        <form class="layui-form" action="" onsubmit="javascript:return false;">
+		        <ul>
+		            <li>
+		                <label for="deviceName">设备名称：</label>
+		                <input type="text" class="layui-input" id="deviceName" name="deviceName"/>
+		            </li>
+		            <li>
+		                <label for="deviceCode">设备编码：</label>
+		                <input type="text" class="layui-input" id="deviceCode" name="deviceCode"/>
+		            </li>
+		            <li>
+		                <label for="factoryName">厂商名称：</label>
+		                <input type="text" class="layui-input" id="factoryName" name="factoryName"/>
+		            </li>
+		            <li>
+		                <label for="brandName">品牌名称：</label>
+		                <input type="text" class="layui-input" id="brandName" name="brandName"/>
+		            </li>
+		            <li>
+	                    <label class="layui-form-label">是否上架：</label>
+	                    <select name="isPutaway" id="isPutaway" name="isPutaway">
+	                        <option value="all">全部</option>
+	                        <option value="1">已上架</option>
+	                        <option value="0">未上架</option>
+	                    </select>
+		            </li>
+		            <li>
+		            	<p>
+				            <button class="layui-btn" id="search">搜索</button>
+				            <button class="layui-btn layui-btn-normal" id="addDevice">添加</button>
+				            <a class="layui-btn layui-btn-danger" href="javascript:;" id="exportBtn">导出</a>
+		            		<a href="/model/deviceDefinitionsModel.xls" class="layui-btn layui-btn-primary">下载导入模版</a>
+				        </p>
+		            </li>
+		        </ul>
+	        </form>
+	    </div>
+	    <div class="layui-form list-table">
+	        <input type="file" id="file" name="file" style="display:none;"></input>
+	        <table class="layui-table" style="width: auto;min-width: 100%" lay-even>
+	            <colgroup>
+	                <col width="200">
+	                <col width="200">
+	                <col width="200">
+	                <col width="200">
+	                <col width="200">
+	                <col width="250">
+	                <col>
+	            </colgroup>
+	            <thead>
+	            <tr>
+	                <th>设备名称</th>
+	                <th>设备编码</th>
+	                <th>品牌</th>
+	                <th>厂商</th>
+	                <th>是否上架</th>
+	                <th>操作</th>
+	            </tr>
+	            </thead>
+	            <tbody id="table_body">
+	            </tbody>
+	        </table>
+	    </div>
+	    <div id="pageTag" style="text-align:center;"></div>
+	</div>
+</body>
+<form id="tipForm" class="layui-form" action="" style="padding-top:20px;padding-right:10px;" onsubmit="javascript:return false;">
+	<div class="layui-form-item">
+		<label class="layui-form-label">设备名称 <span>*</span></label>
+		<div class="layui-input-block">
+			<input type="text" id="definitionName" name="definitionName" required lay-verify="required" placeholder="请输入设备名称" autocomplete="off" class="layui-input" maxlength="20"/>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">设备编码 </label>
+		<div class="layui-input-block">
+			<input type="text" id="definitionCode" name="definitionCode" placeholder="设备编码" autocomplete="off" class="layui-input" maxlength="60" disabled/>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">设备规格 <span>*</span></label>
+		<div class="layui-input-block">
+			<input type="text" id="definitionSpec" name="definitionSpec" required lay-verify="required" placeholder="请输入设备规格" autocomplete="off" class="layui-input" />
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">设备厂商 <span>*</span></label>
+		<div class="layui-input-block">
+			<select id="deviceFirmid" name="deviceFirmid" required lay-verify="required" lay-filter="deviceFirmFilter">
+				<option value="#">#</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">品牌 <span>*</span></label>
+		<div class="layui-input-block">
+			<select id="deviceBrandid" name="deviceBrandid" required lay-verify="required">
+				<option value="#">#</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">联网类型 <span>*</span></label>
+		<div class="layui-input-block">
+			<select id="networkingType" name="networkingType" required lay-verify="required">
+				<option value="0">无</option>
+				<option value="1">蓝牙</option>
+				<option value="2">wifi</option>
+			</select>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">设备描述</label>
+		<div class="layui-input-block">
+			<textarea id="definitionDesc" name="definitionDesc" placeholder="请输入内容设备描述" class="layui-textarea" autocomplete="off"></textarea>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">是否上架 <span>*</span></label>
+		<div class="layui-input-block">
+			<input type="radio" name="type" value="1" title="是" checked/>
+			<input type="radio" name="type" value="0" title="否" />
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<label class="layui-form-label">检测项目</label>
+		<div class="layui-input-block">
+			<ul id="detectionUL" class="detectionUL"></ul>
+		</div>
+	</div>
+	<div class="layui-form-item">
+		<div class="layui-input-block">
+			<button class="layui-btn" lay-submit lay-filter="saveDevice">立即提交</button>
+			<button type="reset" class="layui-btn layui-btn-primary" customReset='reset' style="display:none;">重置</button>
+		</div>
+	</div>
+</form>
+
+<script src="../../js/tool.js"></script>
+<script src="../../layui/layui.js"></script>
+<script>
+	layui.use(['element', 'form', 'layer', 'jquery','laypage'], function() {
+	    var $ = layui.jquery,form = layui.form(),element = layui.element(),layer = layui.layer,laypage = layui.laypage;
+		var populate = {pageSize:10,currentPage:1,totleCount:10,pageCount:2};
+	    var global = {detections:1,isUpdate:false};
+	    //导出
+	    $('#exportBtn').on('click',function(){
+	    	var query='?';
+	    	var definitionName = $('#deviceName').val();
+	    	var definitionCode = $('#deviceCode').val();
+	    	var definitionSpec = $('#factoryName').val();
+	    	var deviceFirmid = $('#brandName').val();
+	    	var type = $('#isPutaway').val()=='all' ? '' : $('#isPutaway').val();
+	    	
+	    	if(definitionName) query+='definitionName='+definitionName+'&';
+	    	if(definitionCode) query+='definitionCode='+definitionCode+'&';
+	    	if(definitionSpec) query+='definitionSpec='+definitionSpec+'&';
+	    	if(deviceFirmid) query+='deviceFirmid='+deviceFirmid+'&';
+	    	if(type) query+='type'+type+'&';
+	    	$(this).attr('href','/excelExport/deviceDefinition'+query);
+	    })
+	    function loading(formParams,populate){
+    		var token = window.utils.getCookie('token');
+            if(!token){return false;}
+            formParams.currentPage = populate.currentPage;
+            formParams.showCount = populate.pageSize,
+			$.ajax({
+	    		url:'/deviceDefinition/getDeviceDefinitionList',
+	            type:'POST',
+	            contentType:'application/json;charset=utf-8',
+	            data:JSON.stringify(formParams),
+	            dataType:'json',
+	            success:function(data){
+	            	if(data.successful && data.status === 200){
+	            		var list = data.items,html = '';
+	            		if(!list || list.length==0){
+	            			$('#table_body').html('<tr><td colspan="6" style="text-align:center;">未查询到数据</td></tr>');
+		        	    	bind();
+	            			return false;
+	            		}
+	            		list && (global.list = list);
+	                	for(var i=0;i<list.length;i++){
+	                    	var item = list[i];
+	                    	html += '<tr>';
+	                        html += '<td>'+item.definitionName+'</td>';
+	                        html += '<td>'+item.definitionCode+'</td>';
+	                        html += '<td>'+item.deviceBrandName+'</td>';
+	                        html += '<td>'+item.deviceFirmName+'</td>';
+	                        html += '<td>'+(item.type==1?'已上架':'已下架')+'</td>';
+	                        html += '<td>';
+	                        html += '<button class="layui-btn layui-btn-small edit-node" customId="'+item.id+'">修改</button>';
+	                        html += '<button class="layui-btn layui-btn-primary layui-btn-small upload-node" customId="'+item.id+'">导入</button>';
+	                        html += '<button class="layui-btn layui-btn-danger layui-btn-small del-node" customId="'+item.id+'" customType="'+item.type+'">删除</button>';
+	                        html += '</td>';
+	                        html += '</tr>';
+	                    }
+	                    //console.log(html);
+	                    laypage({
+	                	    cont: 'pageTag'
+	                	    ,pages: data.pagesCount
+	                	    ,groups: 5 //连续显示分页数
+	                	    ,curr:data.pageNumber || 1
+	                	    ,jump: function(obj, first){
+	                	    	if(!first){
+	                	    		//得到了当前页，用于向服务端请求对应数据
+	                	    		populate.currentPage = obj.curr;
+	                	    		var tempSearchObj = {};
+	                	    		$('#deviceName').val() && (tempSearchObj.definitionName = $('#deviceName').val());
+	                	    		$('#deviceCode').val() && (tempSearchObj.definitionCode = $('#deviceCode').val());
+	                	    		$('#factoryName').val() && (tempSearchObj.definitionSpec = $('#factoryName').val());
+	                	    		$('#brandName').val() && (tempSearchObj.deviceFirmid = $('#brandName').val());
+	                	    		$('#isPutaway').val() && (tempSearchObj.type = $('#isPutaway').val());
+		                		    loading(tempSearchObj,populate); 
+	                	    	}
+	                		}
+	                	});
+	                	populate.currentPage = data.pageNumber*1;//当前页数
+	                    populate.totleCount = data.totalItemsCount*1;//总数
+	                    populate.pageCount = data.pagesCount*1; //总页数
+	                    $('#table_body').html(html);
+	            	    bind();
+	                }else{
+	                    console.error(data);
+	                    layer.msg(data.resultCode.message);
+	                }
+	            },
+	            error:function(error){
+	                console.error(error);
+	                layer.msg('查询失败!');
+	            }
+	    	});
+	    };
+
+	    function bind(){
+	    	$('#search,#addDevice,.edit-node,.del-node,.upload-node').unbind();
+	    	// 搜索
+	    	$('#search').on('click',function(){
+	    		populate.currentPage = 1;
+	    		var tempSearchObj = {};
+	    		$('#deviceName').val() && (tempSearchObj.definitionName = $('#deviceName').val());
+	    		$('#deviceCode').val() && (tempSearchObj.definitionCode = $('#deviceCode').val());
+	    		$('#factoryName').val() && (tempSearchObj.deviceFirmName = $('#factoryName').val());
+	    		$('#brandName').val() && (tempSearchObj.deviceBrandName = $('#brandName').val());
+	    		$('#isPutaway').val() && (tempSearchObj.type = $('#isPutaway').val());
+	    		if(tempSearchObj.type=='all'){
+	    			delete tempSearchObj.type;
+	    		}
+	    		loading(tempSearchObj,populate);
+	    		return false;
+	    	});
+	    	// 弹出
+	    	$('#addDevice').on('click',function(){
+	    		global.addOrUpdate = 'add';
+	    		layer.open({
+	    			id:'add1',
+	                title:'新增设备定义',
+	                type: 1,
+	                area: ['70%', '98%'],
+	                btnAlign: 'c',
+	                shade: 0.5,
+	                content: $('#tipForm'),
+	                cancel: function(index, layero){ 
+	                	layer.close(index);
+                	}    
+	            });
+	    		/*if($('.layui-layer-shade').length>1){
+	    			for(var i=1;i<=$('.layui-layer-shade').length;i++){
+	    				$('.layui-layer-shade')[i].remove();
+	    			}
+	    		}*/
+				$('button[type="reset"]').removeAttr('disabled');
+	    		$('#search').click();
+                $('button[type="reset"]').click();
+                $('.detectionUL').html('<li class="detectionLI"><div><i class="add_icon addProject"></i></div></li>');
+                global.detections = 1;
+				$('#tipForm input[type="text"]').removeAttr('disabled');
+				$('#tipForm testarea').removeAttr('disabled');
+				$('#tipForm select').removeAttr('disabled');
+				$('#definitionCode').attr('disabled','true');
+				global.isUpdate = false;
+	    		return false;
+	    	});
+	    	// 修改
+	    	$('.edit-node').on('click',function(){
+	    		var customId = $(this).attr('customId');
+	    		global.customId = customId;
+	    		global.addOrUpdate = 'update';
+	    		$.ajax({
+	    			url:'/deviceDefinition/getDeviceDefinitionById?id='+customId,
+	    			type:'GET',
+	    			dataType:'json',
+	    			success:function(data){
+	                    if(data.status === 200 && data.resultCode.code === 'SUCCESS'){
+	        	    		layer.open({
+	        	    			id:'edit1',
+	        	                title:'修改设备定义',
+	        	                type: 1,
+	        	                area: ['70%', '98%'],
+	        	                btnAlign: 'c',
+	        	                shade: 0.5,
+	        	                content: $('#tipForm'),
+	        	                cancel: function(index, layero){ 
+	        	                	console.log('修改close');
+	        	                	layer.close(index);
+	                        	}    
+	        	            });
+	                    	var item = data.data;
+	                    	console.log(item);
+	                    	$('#definitionName').val(item.definitionName);
+		    				$('#definitionCode').val(item.definitionCode);
+		    				$('#definitionSpec').val(item.definitionSpec);
+		    				$('#definitionDesc').val(item.definitionDesc);
+		    				$('#deviceFirmid').val(item.deviceFirmid);
+		    				brandList(item.deviceFirmid);
+		    				$('#deviceBrandid').val(item.deviceBrandid);
+		    				$('#networkingType').val(item.networkingType);
+		    				$('#tipForm').find('input:radio[name="type"][value="'+item.type+'"]').get(0).checked = true;
+		    				global.detections = (item.projectList && item.projectList.length);
+		    				console.log(global.detections);
+		    				if(global.detections){
+		    					bindDetection(item.projectList);
+		    				}else{
+		    					$('.detectionUL').html('<li class="detectionLI"><div><i class="add_icon addProject"></i></div></li>');
+		    				}
+	    					formBind();
+		    				if(item.type==1){
+		    					$('#tipForm input[type="text"]').attr('disabled','true');
+		    					$('#tipForm textarea').attr('disabled','true');
+		    					$('#tipForm select').attr('disabled','true');
+			    				$('button[type="reset"]').attr('disabled','true');
+		    					global.isUpdate = true;
+		    				}else{
+			    				$('button[type="reset"]').removeAttr('disabled');
+		    					$('#tipForm input[type="text"]').removeAttr('disabled');
+		    					$('#tipForm testarea').removeAttr('disabled');
+		    					$('#tipForm select').removeAttr('disabled');
+		    					$('#definitionCode').attr('disabled','true');
+		    				}
+		    				form.render();
+	                    }else{
+	                        console.error(data);
+	                        layer.msg(data.resultCode.message);
+	                    }
+	                },
+	                error:function(error){
+	                    console.error(error);
+	                    layer.msg('查询错误');
+	                }
+	    		});
+	    	});
+	    	// 点击删除
+	    	$('.del-node').on('click',function(e){
+	    		if($(this).attr('customType')==1){
+	    			return layer.msg('已上架设备定义不能删除');
+	    		}
+	    		var customId = $(this).attr('customId');
+                if(!customId){return false;}
+                // todo
+    	        layer.confirm('确定删除当前设备定义，删除后无法恢复？', {
+    	            shadeClose: true, 
+    	            btn: ['取消', '删除'] 
+    	        }, function() {
+    	            layer.closeAll();
+    	        }, function() {
+    	            $.ajax({
+    	                url:'/deviceDefinition/deleteDeviceDefinition?id='+customId,
+    	                type:'GET',
+    	                dataType:'json',
+    	                success:function(data){
+    	                    if(data.successful && data.status === 200 && data.resultCode.code === 'SUCCESS'){
+    	                        layer.msg('删除成功!');
+    	                        $('#search').click();
+    	                    }else{
+    	                        console.error(data);
+    	                        layer.msg(data.resultCode.message);
+    	                    }
+    	                },
+    	                error:function(error){
+    	                    console.error(error);
+    	                    layer.closeAll();
+    	                    layer.msg('删除失败!');
+    	                }
+    	            });
+    	        });
+	    	});
+	    	
+	    	$('.upload-node').on('click',function(){
+	    		global.customId = $(this).attr('customId');
+	    		$('#file').click();
+	    	});
+	    	
+	    	$('#file').change(function(){
+	    		
+	    		if(!filterExcel($('#file').val())){return false;}
+	    		var indexLoad = layer.load(1, {
+	    			time:60000,
+    			  	shade: [0.1,'#fff']
+    			});
+	    		var formData = new FormData();
+	    		formData.append('definitionId', global.customId);
+	    		formData.append('managerId', window.utils.getCookie("user_id"));
+	    		formData.append('file', $('#file')[0].files[0]);
+	    		$.ajax({
+	    		    url: '/deviceInfo/fileImport',
+	    		    type: 'POST',
+	    		    cache: false,
+	    		    data: formData,
+	    		    processData: false,
+	    		    contentType: false,
+	    		    success:function(data) {
+		    			if(data.status==200 && data.resultCode.code=='SUCCESS'){
+		    				layer.msg(data.resultCode.message);
+		    			}else{
+		    				layer.msg(data.resultCode.message);
+		    			}
+		    			clearInputFile(document.getElementById('file'));
+		    			layer.close(indexLoad);
+		    		},
+		    		error:function(res) {
+		    			console.log(res);
+		    			layer.msg('上传失败');
+		    			clearInputFile(document.getElementById('file'));
+		    			layer.close(indexLoad);
+		    		}
+		    	});
+	    	});
+	    	
+	    	formBind();
+	    };
+	    
+	    form.on('select(deviceFirmFilter)', function(data){
+	        brandList(data.value);
+	    });
+	    
+	    function formBind(){
+    		$('.addProject').unbind();
+	    	$('.minusProject').unbind();
+	    	$('.minusProject').on('click',function(e){
+		    	if(global.isUpdate){return false;}
+	    		var length = $('.detectionLI').length;
+	    		if((length--)==1){
+		    		//$($($($('.detectionLI')[0]).children()[0]).children()[0]).css('display','inline-block');
+		    		$('.detectionUL').html('<li class="detectionLI"><div><i class="add_icon addProject"></i></div></li>');
+	    		}
+	    		if($('.detectionLI').length>1){
+		    		$(e.target).parent().parent().remove();
+		    		$($($($('.detectionLI')[$('.detectionLI').length-1]).children()[0]).children()[0]).css('display','inline-block');
+	    		}
+	    		global.detections = $('.detectionLI').length;
+	    		formBind();
+	    	});
+	    	$('.addProject').on('click',function(e){
+		    	if(global.isUpdate){return false;}
+	    		addProjectFn(e);
+				formBind();
+	    	});
+	    };
+	    
+	    function addProjectFn(e){
+	    	global.detections++;
+    		var html = '';
+    		html +='<li class="detectionLI">';
+    		html +='<div>';
+	    	html +='<i class="add_icon addProject"></i>';
+	    	html +='</div>';
+    		html +='<div>';
+    		html +='<label>名称:</label>';
+    		html +='<input type="text" name="projectName" placeholder="请输入检测名称"/>';
+    		html +='</div>';
+    		html +='<div>';
+    		html +='<label>单位:</label>';
+    		html +='<input type="text" name="projectUnit" placeholder="请输入检测单位"/>';
+    		html +='</div>';
+    		html +='<div>';
+    		html +='<i class="minus_icon minusProject" customNumber="'+global.detections+'"></i>';
+    		html +='</div>';
+    		html +='</li>';
+    		if($('.detectionLI').children().length==1){
+    			$('#detectionUL').html(html);
+    		}else{
+        		$('#detectionUL').append(html);
+    		}
+    		$(e.target).css('display','none');
+	    };
+	    
+	    function bindDetection(list){
+	    	if(list && list.length>0){
+	    		global.detections = list.length;
+	    	}
+	    	var html = '';
+	    	for(var i=0;i<global.detections;i++){
+	    		html +='<li class="detectionLI">';
+	    		html +='<div>';
+	    		if(i == global.detections-1){
+		    		html +='<i class="add_icon addProject"></i>';
+	    		}
+		    	html +='</div>';
+	    		html +='<div>';
+	    		html +='<label>名称:</label>';
+	    		html +='<input type="text" name="projectName" placeholder="请输入检测名称" value="'+((list&&(list[i].projectName!=''))?list[i].projectName:'')+'"/>';
+	    		html +='</div>';
+	    		html +='<div>';
+	    		html +='<label>单位:</label>';
+	    		html +='<input type="text" name="projectUnit" placeholder="请输入检测单位" value="'+((list&&(list[i].projectUnit!=''))?list[i].projectUnit:'')+'"/>';
+	    		html +='</div>';
+	    		html +='<div>';
+	    		html +='<i class="minus_icon minusProject" customNumber="'+global.detections+'"></i>';
+	    		html +='</div>';
+	    		html +='</li>';
+	    	}
+	    	$('#detectionUL').html(html);
+	    };
+	    
+	    function deviceFirmList(){
+			$.ajax({
+             	url:'/deviceFirms/getDeviceFirms',
+             	type:'POST',
+             	data:{},
+             	success:function(data){
+             		if(data.successful){
+             			var str='',data=data.data;
+	             		$.each(data,function(index,item){
+	             			str+='<option value="'+item.id+'">'+item.firmName+'</option>'
+	             		})
+	             		$('#deviceFirmid').html('<option value="">请选择厂商</option>').append(str);	             		
+	             		form.render();
+             		}
+             		
+             	}
+            });
+		};
+		 
+		function brandList(firmId){
+			$.ajax({
+             	//url:'/deviceBrands/getDeviceBrands',
+             	url:'/deviceBrands/selectDeviceBrandsListPage',
+             	type:'POST',
+             	async:false,
+             	data:{pageSize:100,currentsPage:1,firmId :firmId},
+             	success:function(data){
+             		if(data.successful){
+             			var str='',data=data.items;
+	             		$.each(data,function(index,item){
+	             			str+='<option value="'+item.id+'">'+item.brandName+'</option>'
+	             		})
+	             		$('#deviceBrandid').html('<option value="">请选择品牌</option>').append(str);
+	             		form.render();
+             		}
+             		
+             	}
+            })
+		};
+	    
+	    form.on('submit(saveDevice)', function(data) {
+	    	console.log(global.isUpdate);
+	    	//if(global.isUpdate){layer.msg('当前设备已上架。如需修改信息请先下架!');global.isUpdate=false;return false;}
+	    	var tempProjectList = [],projectList = [];
+	    	var tempLis = $('.detectionLI');
+	    	console.log(tempLis);
+			for(var i=0;i<tempLis.length;i++){
+				var item = $(tempLis[i]).find('input');
+				if(item && item.length>0){
+					var tempObj = {};
+					for(var j=0;j<item.length;j++){
+						var inp = $(item[j])[0];
+						if(inp.name=='projectName'){
+							tempObj.projectName = inp.value;
+						}else if(inp.name=='projectUnit'){
+							tempObj.projectUnit = inp.value;
+						}
+					}
+					tempProjectList.push(tempObj);
+				}
+			}
+			console.log(tempProjectList);
+			for(var i=0;i<tempProjectList.length;i++){
+				var item = tempProjectList[i];
+				if(item.projectName!='' && item.projectUnit!=''){
+					projectList.push(tempProjectList[i]);
+				}
+			}
+	    	var body = data.field;
+	    	for(var item in body){
+	    		if(item=='projectName' || item =='projectUnit'){
+	    			delete body[item];
+	    		}
+	    	}
+	    	body.id= global.customId;
+	    	body.projectList = projectList.length>0?projectList:null;
+			console.log(global.addOrUpdate);
+	    	console.log(body);
+            
+            var paramObj = {
+            	url:'/deviceDefinition/addDeviceDefinition',
+            	data:body
+            }
+            if(global.addOrUpdate=='update'){
+            	paramObj.url="/deviceDefinition/updateDeviceDefinition";
+            }
+            
+            $.ajax({
+                url:paramObj.url,
+                type:'POST',
+	            contentType:'application/json;charset=utf-8',
+                data:JSON.stringify(paramObj.data),
+                dataType:'json',
+                success:function(data){
+                    if((data.status == 200) && (data.resultCode.code == 'SUCCESS')){
+                        layer.closeAll();
+                        layer.msg('操作成功!');
+    					$('#tipForm input[type="text"]').removeAttr('disabled');
+    					$('#tipForm textarea').removeAttr('disabled');
+    					$('#tipForm select').removeAttr('disabled');
+	    				$('button[type="reset"]').removeAttr('disabled');
+    					$('#definitionCode').attr('disabled','true');
+    					global.isUpdate = false;
+    					global.detections = 1;
+                        $('button[type="reset"]').click();
+                        $('#search').click();
+                    }else{
+                        layer.closeAll();
+                        console.error(data);
+                        layer.msg(data.resultCode.message);
+                    }
+                },
+                error:function(error){
+                    layer.closeAll();
+                    console.error(error);
+                    layer.msg('查询错误');
+                }
+            });
+    		return false;
+	    });
+	    
+	    function clearInputFile(f){
+    	  	if(f.value){
+    	    	try{
+    	      		f.value = '';
+    	    	}catch(err){
+	    	    }
+	    	    if(f.value){
+	    	      	var form = document.createElement('form'), ref = f.nextSibling, p = f.parentNode;
+	    	      	form.appendChild(f);
+	    	      	form.reset();
+	    	      	p.insertBefore(f,ref);
+	    	    }
+    	  	}
+    	}
+	    
+	    function filterExcel(fileName){
+	    	if (fileName === '') {
+	    		layer.msg('请选择文件');
+				return false;
+			}
+			var fileType = (fileName.substring(fileName.lastIndexOf(".") + 1,fileName.length)).toLowerCase();
+			if (fileType !== 'xls') {
+				layer.msg('文件格式不正确，请选择excel文件！');
+				return false;
+			}
+			return true;
+	    }
+	    loading({},populate);
+    	bindDetection();
+	    deviceFirmList();
+    	
+    });
+</script>
+</html>

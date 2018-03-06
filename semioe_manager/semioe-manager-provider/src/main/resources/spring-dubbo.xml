@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd   
+
+
+    http://code.alibabatech.com/schema/dubbo        
+    http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="semioe-manager-provider" />
+
+	<!-- 使用zookeeper广播注册中心暴露服务地址 -->
+	<dubbo:registry protocol="zookeeper" address="${zookeeper.url}"/>
+
+	<!-- 用dubbo协议在20881端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="${zookeeper.port}" />
+	
+	<!-- 设置dubbo全局超时时间 -->
+	<dubbo:provider timeout="5000" />
+
+	<!-- 具体的实现bean <bean id="managerService" class="com.semioe.dubbo.service.impl.ManagerServiceImpl" 
+		/> 声明需要暴露的服务接口 <dubbo:service interface="com.semioe.dubbo.service.ManagerService" 
+		ref="managerService" timeout="4000"/> -->
+
+	<!-- 官方注释：扫描注解包路径，多个包用逗号分隔，不填pacakge表示扫描当前ApplicationContext中所有的类。 测试发现：此处package不填写包名会无法注册Service，扫描全包需填写包首即可或者填写至类的上一级目录。 -->
+	<dubbo:annotation package="com.semioe.dubbo.service" />
+
+</beans>

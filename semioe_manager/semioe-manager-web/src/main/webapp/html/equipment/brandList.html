@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>品牌列表</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select my-tab-select2">
+        <ul>
+            <li>
+                <label for="brandName">品牌名称：</label>
+                <input type="text" class="layui-input" id="brandName"/>
+            </li>
+            <li>
+                <label for="venderName">厂商：</label>
+                <input type="text" class="layui-input" id="venderName"/>
+            </li>
+        </ul>
+        <p>
+            <button class="layui-btn " id="search">搜索</button>
+            <a href="addBrand.html" class="layui-btn layui-btn-normal">新增</a>
+            <a class="layui-btn layui-btn-danger" href="javascript:;" id="exportBtn">导出</a>
+        </p>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%">
+            <colgroup>
+                <col width="">
+                <col width="">
+                <col width="200">
+                <col width="200">
+                <col width="150">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>品牌名称</th>
+                <th>品牌描述</th>
+                <th>厂商</th>
+                <th>是否删除</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="../../js/equipment/brandList.js"></script>
+</body>
+</html>

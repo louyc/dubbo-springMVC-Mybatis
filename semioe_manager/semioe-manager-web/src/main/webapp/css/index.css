@@ -1,0 +1,156 @@
+body{ background-color: #000000; overflow: hidden;}
+.covervid-wrapper {
+	position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+}
+.github-link {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	opacity: 0.15;
+	-webkit-transition: 0.4s all ease;
+	-moz-transition: 0.4s all ease;
+	transition: 0.4s all ease;
+}
+.github-link:hover {
+	opacity: 0.4;
+}
+.fd{
+	position: absolute; top: 48%; color: #FFFFFF; font-size: 40px; width: 100%; text-align: center; 
+	font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif; 
+	transition: all ease 1s;
+	-moz-transition: all ease 1s;	/* Firefox 4 */
+	-o-transition: all ease 1s;	/* Opera */
+}
+.fd p{font-size: 14px; }
+
+.news-bubble { width: 30%; height: 100%; position: absolute; right: 0; top: 0; -webkit-animation: animation-news 2.5s linear; font-family: Microsoft YaHei;}
+.news-bubble *{margin:0;padding:0;list-style-type:none;}
+.news-bubble  a,.news-bubble img{border:0;}
+.news-bubble body{background:#f9f9f9 url(imge/nav_icon.png) repeat top left;color:#333;font-family:Georgia, serif;font-size:13px;}
+.news-bubble a{color:#fff;text-decoration:none; width: 8em; height: 8em;position: absolute;}
+
+.news-bubble a:first-child { 
+	top: 43%;
+	right: 1em;
+	background: #F4F4F4 url(../image/table.png) no-repeat center center;
+	background-size: contain;
+	 -webkit-animation: news-bubble 3s linear infinite alternate;
+}
+.news-bubble a:last-child {
+	top: 60%;
+	right: 1em; 
+	background: #050D19 url(../image/show.png) no-repeat center center;
+	background-size: contain;
+	 -webkit-animation: news-bubble 3s linear 1.5s infinite alternate;
+}
+.news-bubble strong { display: inline-block; margin-top: 25%; font-size: 1.5em;line-height: 100%;}
+.news-bubble p { padding: 0 1em;}
+@-webkit-keyframes news-bubble {
+	from{
+		-webkit-transform: scale(.8);
+	}
+	to{
+		-webkit-transform: scale(1);
+	}
+}
+/* The circle */
+.ec-circle{
+    width: 420px;
+    height: 420px;
+	-webkit-border-radius: 210px;
+	-moz-border-radius: 210px;
+	border-radius: 50%;
+	text-align: center;
+    overflow: hidden;
+	font-family:'Kelly Slab', Georgia, serif;
+    /* background: #dda994 url(../images/1.jpg) no-repeat center center; */
+	-webkit-box-shadow: 
+        inset 0 0 1px 230px rgba(0,0,0,0.2),
+		inset 0 0 0 7px #204F7D;
+	-moz-box-shadow: 
+        inset 0 0 1px 230px rgba(0,0,0,0.2),
+		inset 0 0 0 7px #204F7D;
+	box-shadow: 
+        inset 0 0 1px 230px rgba(0,0,0,0.2),
+		inset 0 0 0 7px #204F7D;
+	-webkit-transition: box-shadow 400ms ease-in-out;
+	-moz-transition: box-shadow 400ms ease-in-out;
+	-o-transition: box-shadow 400ms ease-in-out;
+	-ms-transition: box-shadow 400ms ease-in-out;
+	transition: box-shadow 400ms ease-in-out;
+	/*For IE < 9 so that we have some kind of effect */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
+	display: block;
+	outline: none;
+}
+.ec-circle:hover{
+	-webkit-box-shadow: 
+		inset 0 0 0 0 rgba(0,0,0,0.6),
+		inset 0 0 0 5px #1A98A6,
+		0 0 10px rgba(0,0,0,0.3);
+	-moz-box-shadow: 
+		inset 0 0 0 0 rgba(0,0,0,0.6),
+		/* inset 0 0 0 20px #c18167, */
+		0 0 10px rgba(0,0,0,0.3);
+    box-shadow: 
+		inset 0 0 0 0 rgba(0,0,0,0.6),
+		inset 0 0 0 5px #1A98A6,
+		0 0 10px rgba(0,0,0,0.3);
+	/*For IE < 9 so that we have some kind of effect */
+	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)";
+}
+.loginBox{	
+	position: absolute;
+	background-color: rgba(255,255,255,.1);
+	padding: 20px 40px;
+	border: 1px solid rgba(255,255,255,.2);
+	border-radius: 5px;
+	width: 300px;
+	left: calc(50% - 191px);
+	bottom: 101%;
+	transition: all ease 1s;
+	-moz-transition: all ease 1s;	/* Firefox 4 */
+	-o-transition: all ease 1s;	/* Opera */
+}
+.loginBox table{
+	width: 100%;
+}
+.loginBox table tr:first-child td{
+	color: #f1f1f1;
+	text-align: center;
+	line-height: 42px;
+	font-size: 18px;
+}
+.loginBox input[type="text"],.loginBox input[type="password"],.loginBox button{
+	background-color: rgba(255,255,255,.2);
+	border: 1px solid rgba(255,255,255,.3);
+	height: 32px;
+	color: #f1f1f1;
+	margin-bottom: 20px;
+	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	border-radius: 3px;
+}
+.loginBox button{
+	background-color: rgba(17,86,127,.7)
+}
+.loginBox .btn{
+	width: 45%;
+	text-align: center;
+}
+.loginBox .register{
+	float: right;
+}
+.loginBox .login{float: left;background-color: #009688;}
+.loginBox .cellphoneCode{background-color: #F7B824;}
+.argeement_a{
+	color: #009688;
+}
+.argeement_a:hover{
+	color: #f1f1f1;
+}

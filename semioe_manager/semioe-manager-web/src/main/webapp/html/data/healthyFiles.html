@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>健康档案</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/data/userManage.css"/>
+</head>
+<body>
+<div class="layui-tab layui-tab-brief" id="statistics" lay-filter="filter" style="padding: 15px 3% 0;">
+		<ul class="layui-tab-title">
+		    <li type="1" class="layui-this">家医档案</li>
+		    <li type="2">孕妇保健档案</li>
+		</ul>
+	<div class="layui-tab-content">
+	<div class="layui-tab-item layui-show">
+	<div class="layui-main" id="healthyFiles" style="width: auto">
+	<script id="healthyFileData" type="text/html">
+	<div class="userCode">{{data.name}}<span>编号：{{data.cardId}}</span></div>
+	<div class="my-tab-select">
+		<div class="layui-form">
+			<ul>
+				<li>
+	                <label>性别：</label>
+	                <span>{{data.sexDesc}}</span>
+	            </li>
+	            <li>
+	                <label>身份证号：</label>
+	                <span>{{data.cardId}}</span>
+	            </li>
+	            <li>
+	                <label>出生日期：</label>
+					<span>{{data.birthday}}</span>
+	            </li>
+	            <li>
+	                <label>手机：</label>
+	                <span>{{data.mobile}}</span>
+	            </li>
+	            <li>
+	                <label>紧急联系人：</label>
+	                <span>{{data.contactPeople}}</span>
+	            </li>
+	            <li>
+	                <label>紧急联系电话：</label>
+	                <span>{{data.contactMobile}}</span>
+	            </li><li>
+	                <label>民族：</label>
+	                <span>{{data.nationDesc}}</span>
+	            </li>
+	            <li>
+	                <label>常住类型：</label>
+					<span>{{data.residentTypeDesc}}</span>
+	            </li>
+	            <li>
+	                <label>户籍地址：</label>
+	                <span>{{data.permanentAddressDesc}}</span>
+	            </li>
+	            <li>
+	                <label>婚姻状况：</label>
+	                <span>{{data.maritalStatusDesc}}</span>
+	            </li>
+    	        <li>
+	                <label>文化程度：</label>
+	                <span>{{data.culturalStatusDesc}}</span>
+	            </li>
+	            <li>
+	                <label>现住地址：</label>
+	                <span>{{data.presentAddress}}</span>
+	            </li>
+	            <li>
+	                <label>职业：</label>
+	                <span>{{data.occupationDesc}}</span>
+	            </li>
+	            <li>
+	                <label>工作单位：</label>
+	                <span>{{data.workUnit}}</span>
+	            </li>
+	            <li>
+	                <label>医疗费用类型：</label>
+	                <span>{{data.medicalTypeDesc}}</span>
+	            </li>
+			</ul>
+		</div>
+	</div>
+	<div class="userCode">健康信息</div>
+	<div class="my-tab-select">
+		<div class="layui-form">
+			<ul>
+				<li>
+	                <label>血型：</label>
+	                <span>{{data.bloodyDesc}}</span>
+	            </li>
+	            <li>
+	                <label>RH：</label>
+	                <span>{{data.rhDesc}}</span>
+	            </li>
+	            <li>
+	                <label>药物过敏史：</label>
+	                <span>{{data.guominshi}}</span>
+	            </li>
+            </ul>
+         </div>
+     </div>
+     <table class="layui-table big_table" lay-even="" lay-skin="nob">
+     	<colgroup>
+		    <col width="120">
+		    <col>
+		  </colgroup>
+     	<tr>
+     		<td class="border_right"><span class="shuzhiString">既往史</span></td>
+     		<td>
+     			<table class="layui-table" lay-even="" lay-skin="nob">
+					<tr class="border_bottom">
+						<td class="big_item">疾病</td>
+						<td colspan="2">
+							<table class="layui-table two_table" lay-even="" lay-skin="nob">
+								{{each data.jibing as item index}}
+									<tr>
+										<td>{{item.name}}</td>
+										<td>确诊时间：{{item.time}}</td>
+									</tr>
+								{{/each}}
+							</table>
+						</td>
+					</tr>
+					<tr class="border_bottom">
+						<td class="big_item">手术</td>
+						<td colspan="2">
+							<table class="layui-table two_table" lay-even="" lay-skin="nob">
+								{{each data.shoushu as item index}}
+									<tr>
+										<td>{{item.name}}</td>
+										<td>手术时间：{{item.time}}</td>
+									</tr>
+								{{/each}}
+							</table>
+						</td>
+					</tr>
+					<tr class="border_bottom">
+						<td class="big_item">外伤</td>
+						<td colspan="2">
+							<table class="layui-table two_table" lay-even="" lay-skin="nob">
+								{{each data.waishang as item index}}
+									<tr>
+										<td>{{item.name}}</td>
+										<td>外伤时间：{{item.time}}</td>
+									</tr>
+								{{/each}}
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td class="big_item">输血</td>
+						<td colspan="2">
+							<table class="layui-table two_table" lay-even="" lay-skin="nob">
+								{{each data.shuxue as item index}}
+									<tr>
+										<td>{{item.name}}</td>
+										<td>输血时间：{{item.time}}</td>
+									</tr>
+								{{/each}}
+							</table>
+						</td>
+					</tr>
+				</table>
+     		</td>
+     	</tr>
+     </table>
+     <table class="layui-table big_table" lay-even="" lay-skin="nob">
+     	<colgroup>
+		    <col width="120">
+		    <col>
+		  </colgroup>
+     	<tr>
+     		<td class="border_right"><span class="shuzhiString">家族史</span></td>
+     		<td>
+     			<table class="layui-table" lay-even="" lay-skin="nob">
+					<tr class="border_bottom">
+						<td class="big_item">父亲</td>
+						<td colspan="2">
+							<ul class="familyHistory_ul">
+								{{each data.father as item index}}
+									<li>{{item.name}}</li>
+								{{/each}}
+							</ul>
+						</td>
+					</tr>
+					<tr class="border_bottom">
+						<td class="big_item">母亲</td>
+						<td colspan="2">
+							<ul class="familyHistory_ul">
+								{{each data.monther as item index}}
+									<li>{{item.name}}</li>
+								{{/each}}
+							</ul>
+						</td>
+					</tr>
+					<tr class="border_bottom">
+						<td class="big_item">兄弟姐妹</td>
+						<td colspan="2">
+							<ul class="familyHistory_ul">
+								{{each data.brother as item index}}
+									<li>{{item.name}}</li>
+								{{/each}}
+							</ul>
+						</td>
+					</tr>
+					<tr>
+						<td class="big_item">子女</td>
+						<td colspan="2">
+							<ul class="familyHistory_ul">
+								{{each data.children as item index}}
+									<li>{{item.name}}</li>
+								{{/each}}
+							</ul>
+						</td>
+					</tr>
+				</table>
+     		</td>
+     	</tr>
+     </table>
+     <div class="my-tab-select">
+		<div class="layui-form">
+			<ul>
+				<li class="half_width">
+	                <label>遗传病史：</label>
+	                <span>{{data.yichuanbingshi}}</span>
+	            </li>
+	            <li class="half_width">
+	                <label>残疾情况：</label>
+	                <span>{{data.canjiqingkuang}}</span>
+	            </li>
+            </ul>
+         </div>
+     </div>
+     <div class="userCode">健康信息</div>
+     <div class="my-tab-select">
+		<div class="layui-form">
+			<ul class="bottom-ul">
+				<li>
+	                <label>厨房排风设施：</label>
+	                <span>{{data.paifeng}}</span>
+	            </li>
+	            <li>
+	                <label>燃料类型：</label>
+	                <span>{{data.ranliao}}</span>
+	            </li>
+	            <li>
+	                <label>饮水：</label>
+	                <span>{{data.yinshui}}</span>
+	            </li>
+	            <li>
+	                <label>厕所：</label>
+	                <span>{{data.cesuo}}</span>
+	            </li>
+	            <li style="margin-bottom: 50px;">
+	                <label>禽畜栏：</label>
+	                <span>{{data.qinchu}}</span>
+	            </li>
+            </ul>
+         </div>
+     </div>
+	</script>
+	</div>
+	</div>
+	<div class="layui-tab-item">
+	<div class="layui-main" id="yunfu" style="width: auto">
+	<script id="yunfudata" type="text/html">
+		<div class="userCode">{{data.name}}<span>建档日期：{{data.createdDate}}</span></div>
+		<div class="my-tab-select">
+			<div class="layui-form">
+				<ul>
+					<li>
+		                <label>证件类型：</label>
+		                <span>身份证</span>
+		            </li>
+		            <li>
+		                <label>证件号码：</label>
+		                <span>{{data.documentCode}}</span>
+		            </li>
+		            <li>
+		                <label>出生日期：</label>
+						<span>{{data.birthday}}</span>
+		            </li>
+		            <li>
+		                <label>年龄：</label>
+		                <span>{{data.age}}</span>
+		            </li>
+		            <li>
+		                <label>文化程度：</label>
+		                <span>{{data.culturalStatusDesc}}</span>
+		            </li>
+		            <li>
+		                <label>国籍：</label>
+		                <span>中国</span>
+		            </li><li>
+		                <label>婚姻状况：</label>
+		                <span>{{data.maritalStatus}}</span>
+		            </li>
+		            <li>
+		                <label>户口地址：</label>
+						<span>{{data.accountAddress}}</span>
+		            </li>
+		            <li>
+		                <label>管理社区：</label>
+		                <span>{{data.managementCommunity}}</span>
+		            </li>
+		            <li>
+		                <label>居住地：</label>
+		                <span>{{data.presentAddress}}</span>
+		            </li>
+		            <li>
+		                <label>建册医生：</label>
+		                <span>{{data.createDoctor}}</span>
+		            </li>
+	    	        <li>
+		                <label>户籍地：</label>
+		                <span>{{data.permanentAddressDesc}}</span>
+		            </li>
+		            <li>
+		                <label>居委会：</label>
+		                <span>{{data.neighborhoodCommittee}}</span>
+		            </li>
+		            <li>
+		                <label>管理区县：</label>
+		                <span>{{data.districtCounty}}</span>
+		            </li>
+					<li>
+		                <label>建册地：</label>
+		                <span>{{data.husbandBuildingAddress}}</span>
+		            </li>
+					<li>
+		                <label>建册地所属区县：</label>
+		                <span>{{data.husbandBuildingArea}}</span>
+		            </li>
+		            <li>
+		                <label>产检地点：</label>
+		                <span>{{data.examinationAddress}}</span>
+		            </li>
+		            <li>
+		                <label>本市农业户口：</label>
+		                <span>{{data.isFarmer}}</span>
+		            </li>
+		            <li>
+		                <label>产后休养地：</label>
+		                <span>{{data.inOutSegmentDesc}}</span>
+		            </li>
+					<li>
+		                <label>在京居住时间：</label>
+		                <span>{{data.liveTime}}</span>
+		            </li>
+		            <!-- <li>
+		                <label>在京居住时间是否大于6个月：</label>
+		                <span>{{data.isMoreSixMonths}}</span>
+		            </li>
+		            <li>
+		                <label>在京居住时间是否大于1年：</label>
+		                <span>{{data.isMoreOneYear}}</span>
+		            </li> -->
+				</ul>
+			</div>
+		</div>
+		<div class="userCode">丈夫基本信息</div>
+		<div class="my-tab-select">
+			<div class="layui-form">
+				<ul>
+					<li>
+		                <label>名称：</label>
+		                <span>{{data.husbandName}}</span>
+		            </li>
+		            <li>
+		                <label>年龄：</label>
+		                <span>{{data.husbandAge}}</span>
+		            </li>
+		            <li>
+		                <label>电话：</label>
+		                <span>{{data.husbandMobile}}</span>
+		            </li>
+					<li>
+		                <label>证件类别：</label>
+		                <span>{{data.husbandCardTypeDesc}}</span>
+		            </li>
+					<li>
+		                <label>证件号码：</label>
+		                <span>{{data.husbandCardId}}</span>
+		            </li>
+		            <li>
+		                <label>户口地址：</label>
+		                <span>{{data.husbandAccountAddress}}</span>
+		            </li>
+		            <li>
+		                <label>居住地：</label>
+		                <span>{{data.husbandPresentAddress}}</span>
+		            </li>
+		            
+	            </ul>
+	         </div>
+	     </div>
+	     <div class="userCode">病史询问</div>
+	     <div class="my-tab-select">
+			<div class="layui-form">
+				<ul class="bottom-ul">
+					<li>
+		                <label>身高：</label>
+		                <span>{{data.height}}</span>
+		            </li>
+		            <li>
+		                <label>孕前体重：</label>
+		                <span>{{data.prePregnancyWeight}}</span>
+		            </li>
+		            <li>
+		                <label>BMI指数：</label>
+		                <span>{{data.bmiIndex}}</span>
+		            </li>
+		            <li>
+		                <label>BMI分类：</label>
+		                <span>{{data.bmiType}}</span>
+		            </li>
+		            <li>
+		                <label>血压：</label>
+		                <span>{{data.bloodPressure}}</span>
+		            </li>
+					<li>
+		                <label>末次月经：</label>
+		                <span>{{data.lastMenstruation}}</span>
+		            </li>
+		            <li>
+		                <label>确诊日期：</label>
+		                <span>{{data.diagnosisDate}}</span>
+		            </li>
+		            <li>
+		                <label>初检孕周：</label>
+		                <span>{{data.gestationalWeeks}}</span>
+		            </li>
+		            <li>
+		                <label>预产期：</label>
+		                <span>{{data.pregnancyBirth}}</span>
+		            </li>
+		            <li>
+		                <label>建册孕周：</label>
+		                <span>{{data.booksGestationalWeeks}}</span>
+		            </li>
+		            <li>
+		                <label>孕次：</label>
+		                <span>{{data.pregnancyTimes}}</span>
+		            </li>
+		            <li>
+		                <label>产次：</label>
+		                <span>{{data.productionTimes}}</span>
+		            </li>
+					<li>
+		                <label>阴道分娩次数：</label>
+		                <span>{{data.vaginalDeliveryTimes}}</span>
+		            </li>
+		            <li>
+		                <label>剖宫产：</label>
+		                <span>{{data.planingPalaceTimes}}</span>
+		            </li>
+		            <li>
+		                <label>自然流产次数：</label>
+		                <span>{{data.naturalAbortionTimes}}</span>
+		            </li>
+		            <li>
+		                <label>药物及人工流产次数：</label>
+		                <span>{{data.noNaturalAbortionTimes}}</span>
+		            </li>
+		            <li>
+		                <label>本次妊娠为：</label>
+		                <span>{{data.gestationTimes}}</span>
+		            </li>
+					<li>
+		                <label>叶酸服用情况：</label>
+		                <span>{{data.isFolicAcid}}</span>
+		            </li>
+		            <li>
+		                <label>是否规律：</label>
+		                <span>{{data.isLaw}}</span>
+		            </li>
+		            <li>
+		                <label>服药种类：</label>
+		                <span>{{data.medicineType.itemName}}</span>
+		            </li>
+		            <li>
+		                <label>服药开始时间：</label>
+		                <span>{{data.medicineTimeDesc}}</span>
+		            </li>
+		            <li>
+		                <label>家族史：</label>
+		                <span>{{data.familyHistoryDesc}}</span>
+		            </li>
+					<li>
+		                <label>个人史：</label>
+		                <span>{{data.personalHistoryDesc}}</span>
+		            </li>
+		            <li>
+		                <label>既往史：</label>
+		                <span>{{data.pastHistoryDesc}}</span>
+		            </li>
+	            </ul>
+	         </div>
+	     </div>
+	 </script>
+   	 </div>
+   	 </div>
+	</div>
+</div>
+<script src="/js/jquery-2.1.1.min.js" charset="utf-8"></script>
+<script src="/js/template.js"></script>
+<script src="/js/tool.js"></script>
+<script src="/layui/layui.js" charset="utf-8"></script>
+<script src="/js/data/healthyFiles.js" charset="utf-8"></script>
+</body>
+</html>

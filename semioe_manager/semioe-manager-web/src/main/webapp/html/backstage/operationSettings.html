@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>运营设置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <style>
+       .info-box { margin: 50px auto; }
+       .tab-ui li {margin-right: 10px;}
+       .layui-form-item .layui-input-inline {width: 100px;height: 100px;}
+       .tab-number {width: 100%;border-bottom:1px solid #ccc;clear:both;}
+       .tab-number li {float: left;}
+       .loadImg{width:5%}
+       .layui-ui-item { margin-top: 75px;}
+       .imgUrl{width: 300px;height: 130px; border: 1px solid #ccc;margin:10px;}       
+       .findImg,.phpImg{width:100px;height:100px;margin: 30px;border: 1px solid #ccc;}
+       .layui-tab-item .layui-input{display: block;width: 235px;} 
+       .imgBox{border:1px solid #ccc;background: url(/image/uploadIcon.png) no-repeat center center; background-size: 60%;}
+	   .imgBox,#upload,#upload1{width:100px;height:100px;overflow:hidden;}
+	   .imgBox img{width:100%;height:100%;}
+	   #upload,#upload1{position:absolute;left:0;top:0;opacity:0;filter=alpha(opacity=0);}
+	   .layui-show p{text-align:center;}
+	   .service_create{
+			position: absolute;
+			top: 0;
+			right: 15px;
+		}
+	   .opa0{display:inline-block;width:70px;height:40px;opacity:0;filter:alpha(opacity=0); margin-right:-70px;position:relative;z-index: 99; }
+	   #addFinder,#addUser{padding-top:20px; height:329px; overflow-y:scroll;}
+	   #addFinder .layui-form-label,#addUser .layui-form-label{width:50px;}
+	   #addFinder .layui-input-block,#addUser .layui-input-block{margin-left:80px;}
+	   .setCont{padding:0 30px;}
+	   .setCont h3{font-size:16px; margin-bottom:20px;}
+	   .setList{padding-left:50px;}
+	   .setList li{margin-bottom:20px;}
+	   .setList li img{width:50px; height:50px; margin-right:15px;}
+	   .setList li span{display:inline-block; width:350px; margin-right:15px;}
+	   .disNone{display:none;}
+    </style>
+</head>
+<body>
+<div class="layui-main" style="width:auto">
+	<div class="layui-form">
+		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+	        <ul class="layui-tab-title tab-title tab-ui">
+	            <li class="layui-this operation" type="0">Banner设置</li>
+	            <li class="operation" type="1">发现推荐位设置</li>
+	            <li class="operation" type="2">PHR推荐位设置</li>
+	            <li class="operation" type="3">内容区推荐位设置</li>
+	        </ul>
+	        <button data-method="offset" class="layui-btn service_create" id="addLogo">添加</button>
+		</div>
+		<div class="layui-form">
+		   <table class="layui-table list-table">
+		       <colgroup>
+		           <col width="400">
+		           <col width="">
+		           <col width="200">
+		       </colgroup>
+		       <thead>
+		       		<tr>
+		       			<th>图片</th>
+		       			<th>地址</th>
+		       			<th>操作</th>
+		       		</tr>
+		       </thead>
+		       <tbody>
+		        <tr>
+		        </tr>
+		       </tbody>
+		   </table>
+		</div>
+	    <!-- 添加发现 -->
+	    <div class="layui-box" id="addFinder" style="display: none;">
+            <div class="layui-form-item">
+				<label class="layui-form-label">顶图:</label>
+				<div class="layui-input-block">
+				  	<div class="imgBox">
+				  		<img src="" alt="" />
+				  	</div>
+				  	<form id="uploadFile1"><input type="file" name="file" id="upload1" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg"/></form>
+				</div>
+			</div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">标题:</label>
+                <div class="layui-input-block">
+                    <input type="text" autocomplete="off" placeholder="请输入标题" class="layui-input " id="title">
+                </div>
+            </div>
+            <div class="layui-form-item disNone">
+				<label class="layui-form-label">介绍:</label>
+				<div class="layui-input-block">
+				  	<script id="discribe" name="discribe" type="text/plain"></script>
+				</div>
+			</div>
+            <div class="setCont disNone">
+            		<h3>推荐设置：</h3>
+            		<div class="layui-form-item">
+            			<ul class="setList">
+            			</ul>
+            			<p style="text-align:center"><button data-method="offset" class="layui-btn layui-btn-small" id="addBtn">添加</button></p>
+            		</div>
+            </div>
+            <!-- <div class="layui-form-item role-item">
+                <label class="layui-form-label">选择设置:</label>
+                <div class="layui-input-block">
+                    <select name="search-audit-status" id="search-audit-status" lay-filter="search-audit-status">
+                        <option value="">请选择设置</option>
+                        <option value="0">Banner设置</option>
+                        <option value="1">发现推荐位设置</option>
+                        <option value="2">PHR推荐位设置</option>
+                    </select>
+                </div>
+
+            </div> -->
+    		</div>
+      	<!-- 添加推荐设置 -->
+	    <div class="layui-box layui-form" id="addUser" style="display: none;">
+            <div class="layui-form-item">
+				<label class="layui-form-label">头像:</label>
+				<div class="layui-input-block">
+				  	<div class="imgBox">
+				  		<img src="" alt="" />
+				  	</div>
+				  	<form id="uploadFile"><input type="file" name="file" id="upload" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg"/></form>
+				</div>
+			</div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">地址:</label>
+                <div class="layui-input-block">
+                    <input type="text" autocomplete="off" placeholder="请输入地址" class="layui-input " id="address">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">商品:</label>
+                <div class="layui-input-block">
+		            <select name="chance_commodity" id="chance_commodity" lay-filter="chance_commodity">
+		             	<option value="">请选择</option>
+		            </select>
+		        </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">服务:</label>
+                <div class="layui-input-block">
+		            <select name="chance_service" id="chance_service" lay-filter="chance_service">
+		             	<option value="">请选择</option>
+		            </select>
+		        </div>
+            </div>
+      	</div>
+	</div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-json.js"></script>
+<script src="../../js/template.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="/js/jquery-json.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+<script src="../../js/backstage/operationSettings.js"></script>
+</body>
+</html>

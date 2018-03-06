@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>厂商列表</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main" style="width: auto;min-width: 100%">
+    <div class="my-tab-select">
+        <form class="layui-form">
+            <ul>
+                <li>
+                    <label for="venderName">厂商名称：</label>
+                    <input type="text" class="layui-input" id="venderName"/>
+                </li>
+            </ul>
+        </form>
+        <p>
+            <button class="layui-btn" id="search">搜索</button>
+            <a href="addVender.html" class="layui-btn layui-btn-normal">新增</a>
+            <a class="layui-btn layui-btn-danger" href="javascript:;" id="exportBtn">导出</a>
+        </p>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table">
+            <colgroup>
+                <col width="200">
+                <col width="">
+                <col width="200">
+                <col width="100">
+                <col width="110">
+                <col width="120">
+                <col width="160">
+                <col width="220">
+                <col width="120">
+                <col width="120">
+            </colgroup>
+            <thead>
+            <tr>
+                <th>厂商名称</th>
+                <th>厂商描述</th>
+                <th>厂商地址</th>
+                <th>厂商邮编</th>
+                <th>厂商联系人</th>
+                <th>厂商联系方式</th>
+                <th>本部联系厂商负责人</th>
+                <th>本部联系厂商负责人联系方式</th>
+                <th>是否删除</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="../../js/equipment/venderList.js"></script>
+</body>
+</html>

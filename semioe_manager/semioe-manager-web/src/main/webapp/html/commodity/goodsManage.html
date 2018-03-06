@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>商品管理</title>
+	<link rel="stylesheet" href="/layui/css/layui.css">
+	<link rel="stylesheet" href="/css/listStyle.css"/>
+</head>
+<body>
+	<div class="layui-main" style="width: auto;min-width: 100%">
+		<div class="my-tab-select">
+		    <ul class="layui-form">
+		    		<li>
+		            <label for="goodsName">商品名称</label>
+			       	<div>
+				      	<input type="text" autocomplete="off" class="layui-input" id="goodsName">
+				    </div>
+			    </li>
+			    <li>
+		            <label for="supplier">供应商</label>
+		            <div>
+		                <input type="text" autocomplete="off" class="layui-input" id="supplier">
+		            </div>
+			    	</li>
+			    	<li>
+		            <label>商品标签</label>
+		            	<div>
+					  	<input type="text" autocomplete="off" class="layui-input" id="goodsTags">
+					</div>
+			    	</li>
+			    	<li>
+				    	<div>
+				    		<label class="layui-form-label">是否上下架</label>
+			            	<select name="order-type" id="order-type">
+			            		<option value="all">全部</option>
+			            		<option value="1">上架</option>
+			            		<option value="2">下架</option>
+				            </select>
+			             </div>
+			    	</li>
+		    </ul>
+	        <p>
+	            <button class="layui-btn" id="search">搜索</button>
+	            <a href="/html/commodity/goodsEdit.html" class="layui-btn layui-btn-normal" id="export">添加</a>
+	            <a class="layui-btn layui-btn-danger" href="javascript:;" id="exportBtn">导出</a>
+	        </p>
+        </div>
+	    <div class="layui-form">
+	        <table class="layui-table list-table">
+	            <colgroup>
+	                <col width="15%">
+	                <col width="15%">
+	                <col width="15%">
+	                <col width="15%">
+	                <col width="20%">
+	                <col width="20%">
+	                <col>
+	            </colgroup>
+	            <thead>
+	            <tr>
+                 	<th>商品名称</th>
+	                <th>商品标签</th>
+	                <th>单价</th>
+	                <th>库存</th>
+	                <th>供应商</th>
+	                <th>操作</th>
+	            </tr>
+	            </thead>
+	            <tbody>
+	            </tbody>
+	        </table>
+	    </div>
+	    <div id="revise-box">
+    			<div class="layui-input-inline layui-form-item">
+	            <label class="layui-form-label">输入库存:</label>
+	            <div class="layui-input-inline">
+	                <input type="number" autocomplete="off" class="layui-input" id="stockNum">
+	            </div>
+	    		</div>
+	    </div>
+	    <div id="pagging"></div>
+	</div>
+	<script src="/layui/layui.js" charset="utf-8"></script>
+	<script src="/js/jquery-2.1.1.min.js"></script>
+	<script src="/js/jquery-json.js"></script>
+	<script src="/js/base.js"></script>
+	<script src="/js/commodity/goodsManage.js"></script>
+</body>
+</html>
+

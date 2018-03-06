@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>订单管理</title>
+    <link rel="stylesheet" href="/layui/css/layui.css"/>
+    <link rel="stylesheet" href="/css/listStyle.css"/>
+</head>
+<body>
+	<div class="layui-form goods-edit">
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品名称<span>*</span></label>
+			<div class="layui-input-block">
+			  	<input type="text" autocomplete="off" placeholder="请输入商品名称" class="layui-input" id="goodsName">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品标签<span>*</span></label>
+			<div class="layui-input-block">
+				<button class="layui-btn" id="checkLabel">选择标签</button>
+			  	<div class="labelBox" id="labelBox"></div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品类型<span>*</span></label>
+			<div class="layui-input-block">
+				<select name="goodsType" id="goodsType"> 
+					<option value="">请选择商品类型</option>
+					<option value="1">健身塑型</option>
+					<option value="2">营养调理</option>
+					<option value="3">外用</option>
+					<option value="4">智能设备</option>
+					<option value="5">其他</option>
+				</select>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">供应商<span>*</span></label>
+			<div class="layui-input-block">
+			  	<input type="text" autocomplete="off" placeholder="" class="layui-input" id="supplier">
+			</div>
+		</div>
+		<div>
+			<div class="layui-form-item layui-input-inline">
+				<label class="layui-form-label">单价<span>*</span></label>
+				<div class="layui-input-block">
+				  	<input type="number" autocomplete="off" placeholder="" class="layui-input" id="price">
+				</div>
+			</div>
+			<div class="layui-form-item layui-input-inline">
+				<label class="layui-form-label">单位<span>*</span></label>
+				<div class="layui-input-block">
+				  	<input type="text" autocomplete="off" placeholder="" class="layui-input" id="unit">
+				</div>
+			</div>
+		</div>
+		<div>
+			<div class="layui-form-item layui-input-inline">
+				<label class="layui-form-label">库存<span>*</span></label>
+				<div class="layui-input-block">
+				  	<input type="number" autocomplete="off" placeholder="" class="layui-input" id="stock">
+				</div>
+			</div>
+			<div class="layui-form-item layui-input-inline">
+				<label class="layui-form-label mt30">商品简图<span>*</span></label>
+				<div class="layui-input-block">
+				  	<div class="imgBox">
+				  		<img src="" alt="" />
+				  	</div>
+				  	<form id="uploadFile" ><input type="file" name="file" id="upload" accept="image/png,image/gif,image/jpg,image/bmp,image/jpeg" /></form>
+				</div>
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">商品详情<span>*</span></label>
+			<div class="layui-input-block">
+			  	<script id="container" name="content" type="text/plain"></script>
+			</div>
+		</div>
+		<div class="btns">
+		 	<button class="layui-btn" id="save">保存</button>
+            <button class="layui-btn layui-btn-normal" id="upGoods">上架</button>
+            <button class="layui-btn layui-btn-normal" id="downGoods" style="display:none">下架</button>
+		</div>
+	</div>
+	<script src="/layui/layui.js" charset="utf-8"></script>
+	<script src="/js/jquery-2.1.1.min.js"></script>
+	<script src="/js/jquery-json.js"></script>	
+	<script src="/js/base.js"></script>
+	<script src="/js/commodity/goodsEdit.js"></script>
+	<!-- 配置文件 -->
+	<script type="text/javascript" src="/ueditor/ueditor.config.js"></script>
+	<!-- 编辑器源码文件 -->
+	<script type="text/javascript" src="/ueditor/ueditor.all.js"></script>
+</body>
+</html>

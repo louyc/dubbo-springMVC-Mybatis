@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semioe.dubbo.dao.OrderStatisticMapper">
+	
+	<resultMap id="PurchaseResultMap" type="com.semioe.api.vo.OrderPurchaseVO">
+		<!-- 订单价格   数据统计返回对象 -->
+		<result column="relation_id" jdbcType="INTEGER" property="relationId" />
+		<result column="relation_name" jdbcType="VARCHAR" property="relationName" />
+		<result column="relation_supplier" jdbcType="VARCHAR" property="relationSupplier" />
+		<result column="relation_supplier_id" jdbcType="VARCHAR" property="relationSupplierId" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="type_desc" jdbcType="VARCHAR" property="typeDesc" />
+		<result column="buy_count" jdbcType="DOUBLE" property="buyCount" />
+		<result column="price_count" jdbcType="DOUBLE" property="priceCount" />
+	</resultMap>
+	
+	<resultMap id="StatisticResultMap" type="com.semioe.api.vo.OrderStatisticVO">
+		<!-- 订单数据对象 -->
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		<result column="relation_id" jdbcType="INTEGER" property="relationId" />
+		<result column="relation_name" jdbcType="VARCHAR" property="relationName" />
+		<result column="relation_supplier" jdbcType="VARCHAR" property="relationSupplier" />
+		<result column="relation_supplier_id" jdbcType="VARCHAR" property="relationSupplierId" />
+		<result column="relation_img_url" jdbcType="VARCHAR" property="relationImgUrl" />
+		<result column="relation_code" jdbcType="VARCHAR" property="relationCode" />
+		<result column="relation_code_name" jdbcType="VARCHAR" property="relationCodeName" />
+		<result column="relation_price" jdbcType="DOUBLE" property="relationPrice" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="price" jdbcType="DOUBLE" property="price" />
+		<result column="order_count" jdbcType="INTEGER" property="orderCount" />
+		<result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+		<result column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="user_mobile" jdbcType="VARCHAR" property="userMobile" />
+		<result column="back_manager_id" jdbcType="VARCHAR" property="backManagerId" />
+		<result column="back_user_name" jdbcType="VARCHAR" property="backUserName" />
+		<result column="back_user_mobile" jdbcType="VARCHAR" property="backUserMobile" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+		<result column="in_use" jdbcType="INTEGER" property="inUse" />
+		<result column="keywords_type" jdbcType="INTEGER" property="keywordsType" />
+	</resultMap>
+	
+	<resultMap id="DutiesResultMap" type="com.semioe.api.vo.OrderDutiesVO">
+		<!-- 订单价格   数据统计返回对象 -->
+		<result column="rel_id" jdbcType="INTEGER" property="relId" />
+		<result column="user_id" jdbcType="VARCHAR" property="userId" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="user_mobile" jdbcType="VARCHAR" property="userMobile" />
+		<result column="sign_user_name" jdbcType="INTEGER" property="signUserName" />
+		<result column="doctor_id" jdbcType="VARCHAR" property="doctorId" />
+		<result column="doctor_name" jdbcType="VARCHAR" property="doctorName" />
+		<result column="doctor_mobile" jdbcType="VARCHAR" property="doctorMobile" />
+		<result column="org_id" jdbcType="VARCHAR" property="orgId" />
+		<result column="build_type" jdbcType="INTEGER" property="buildType" />
+		<result column="order_id" jdbcType="INTEGER" property="orderId" />
+		<result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+		<result column="service_id" jdbcType="INTEGER" property="servieId" />
+		<result column="service_name" jdbcType="VARCHAR" property="serviceName" />
+		<result column="report_count" jdbcType="INTEGER" property="reportCount" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="keywords_type" jdbcType="INTEGER" property="keywordsType" />
+	</resultMap>
+	
+	<sql id="Purchase_Where_Column">
+		<!-- 订单价格 数据统计 查询条件 -->
+		<where>
+			ord.in_use = 1
+			AND ord.pay_status = 1
+			<if test="relationId != null and relationId != '' ">
+				AND ord.relation_id = #{relationId,jdbcType=VARCHAR}
+			</if>
+			<if test="relationName != null and relationName != '' ">
+				AND ord.relation_name LIKE CONCAT(#{relationName,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="relationSupplierId != null and relationSupplierId != '' ">
+				AND ord.relation_supplier_id = #{relationSupplierId,jdbcType=VARCHAR}
+			</if>
+			<if test="relationSupplier != null and relationSupplier != '' ">
+				AND ord.relation_supplier LIKE CONCAT(#{relationSupplier,jdbcType=VARCHAR},'%')
+			</if>
+			<if test="startTime != null ">
+				AND ord.create_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null ">
+				AND ord.create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="type != null ">
+				AND ord.type = #{type,jdbcType=INTEGER}
+			</if>
+			<if test="keyWordsType != null ">
+				AND keyr.key_type = #{keyWordsType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="Purchase_OrderBy_Column">
+		<!-- 订单价格 数据统计 动态排序逻辑 -->
+		<if test="orderColumn != null and orderColumn.size() > 0 ">
+			ORDER BY opd.create_time DESC 
+			<foreach collection="orderColumn" item="item" >
+				<if test = 'item.orderColumnName == "relation_id" or item.orderColumnName == "relation_name" 
+							or item.orderColumnName == "relation_supplier_id" or item.orderColumnName == "relation_supplier"  
+							or item.orderColumnName == "price_count" or item.orderColumnName == "buy_count"  
+							or item.orderColumnName == "type"  ' >
+					, ${item.orderColumnName}
+					<if test='item.sortType == "DESC" '> DESC </if>
+					<if test='item.sortType == "ASC" '> ASC </if>
+				</if>
+			</foreach>
+		</if>
+	</sql>
+	
+	<select id="orderPurchaseInfoListPage" resultMap="PurchaseResultMap" parameterType="com.semioe.api.dto.OrderStatisticDTO" >
+		<!-- 订单价格 数据统计 （无类型区分查询） -->
+		<include refid="SQL_OrderPurchaseInfo" />
+	</select>
+	
+	<select id="orderPurchaseInfo" resultMap="PurchaseResultMap" parameterType="com.semioe.api.dto.OrderStatisticDTO" >
+		<!-- 订单价格 数据统计 （无类型区分查询） -->
+		<include refid="SQL_OrderPurchaseInfo" />
+	</select>
+	
+	<sql id="SQL_OrderPurchaseInfo" >
+		<!-- 订单价格 数据统计 （无类型区分查询） -->
+		SELECT
+			<choose>
+				<when test="groupColumn == 0">
+					opd.relation_id , opd.relation_name , 
+				</when>
+				<when test="groupColumn == 1">
+					opd.relation_supplier_id ,  opd.relation_supplier ,
+				</when>
+				<otherwise>
+					opd.relation_id , opd.relation_name , 
+					opd.relation_supplier_id , opd.relation_supplier ,
+				</otherwise>
+			</choose>
+			SUM(opd.price) AS price_count , SUM(opd.order_count) AS buy_count , opd.type 
+		FROM
+		(
+			<include refid="SQL_OrderPurchaseDetail" />	
+		) AS opd
+		<!-- 动态分组逻辑 -->	
+		GROUP BY
+		<choose>
+			<when test="groupColumn == 0">
+				opd.relation_id
+			</when>
+			<when test="groupColumn == 1">
+				opd.relation_supplier_id
+			</when>
+			<otherwise>
+				opd.relation_id , opd.relation_supplier_id
+			</otherwise>
+		</choose>
+		
+		<include refid="Purchase_OrderBy_Column" />
+	</sql>
+	
+	<select id="orderPurchaseTotalCount" resultType="com.semioe.api.vo.OrderCountVO" parameterType="com.semioe.api.dto.OrderStatisticDTO" >
+		<!-- 订单购买金额、数量 合计统计 -->
+		SELECT 
+			 COUNT(1) AS statisticCount , 
+			 SUM(ordco.price_count) AS countPrice , 
+			 SUM(ordco.buy_count) AS countNumber 
+		FROM
+		(
+			<include refid="SQL_OrderPurchaseInfo" />
+		) AS ordco
+			
+	</select>
+	
+	<select id="orderPurchaseDetailListPage" resultMap="StatisticResultMap" parameterType="com.semioe.api.dto.OrderStatisticDTO" >
+		<!-- 订单购买统计 详情 -->
+		<include refid="SQL_OrderPurchaseDetail" />
+	</select>
+	
+	<select id="orderPurchaseDetail" resultMap="StatisticResultMap" parameterType="com.semioe.api.dto.OrderStatisticDTO" >
+		<!-- 订单购买统计 详情 -->
+		<include refid="SQL_OrderPurchaseDetail" />
+	</select>
+	
+	<sql id="SQL_OrderPurchaseDetail" >
+		<!-- 订单购买统计 详情 -->
+		SELECT
+			ord.id AS id,
+			ord.order_code AS order_code,
+			ord.relation_id AS relation_id,
+			ord.relation_name AS relation_name,
+			ord.relation_supplier AS relation_supplier,
+			ord.relation_supplier_id AS relation_supplier_id,
+			ord.relation_img_url AS relation_img_url,
+			ord.relation_code AS relation_code,
+			ord.relation_code_name AS relation_code_name,
+			ord.relation_price AS relation_price,
+			ord.type AS type,
+			ord.price AS price,
+			ord.order_count AS order_count,
+			ord.pay_status AS pay_status,
+			ord.user_id AS user_id,
+			us.`name` AS user_name,
+			us.mobile AS user_mobile,
+			ord.back_manager_id AS back_manager_id,
+			bus.`name` AS back_user_name,
+			bus.mobile AS back_user_mobile,
+			ord.create_time AS create_time,
+			ord.update_time AS update_time,
+			ord.in_use AS in_use
+		FROM
+			order_info AS ord
+		LEFT JOIN service_info AS ser ON ord.relation_id = ser.id AND ord.type = 1
+		LEFT JOIN api_user_info AS us ON ord.user_id = us.manager_id
+		LEFT JOIN backstage_user_info AS bus ON ord.back_manager_id = bus.manager_id
+		LEFT JOIN keywords_rel AS keyr ON ord.relation_id = keyr.relation_id AND keyr.type = 1 
+		<include refid="Purchase_Where_Column" />
+		GROUP BY
+			ord.id
+	</sql>
+	
+	<select id="orderDutiesListPage" resultMap="DutiesResultMap" parameterType="com.semioe.api.dto.OrderDutiesDTO" >
+		<!-- 履约情况统计 列表查询 -->
+		<include refid="SQL_OrderDuties" />
+	</select>
+	
+	<select id="orderDuties" resultMap="DutiesResultMap" parameterType="com.semioe.api.dto.OrderDutiesDTO" >
+		<!-- 履约情况统计 列表查询 -->
+		<include refid="SQL_OrderDuties" />
+	</select>
+	
+	<sql id="SQL_OrderDuties" >
+		<!-- 履约情况统计 列表查询 -->
+		<choose>
+			<when test="buildType == 1" >
+				SELECT 
+					acu.`name` AS sign_user_name ,
+					orc.user_id AS user_id ,
+					orc.user_mobile AS user_mobile ,
+					orc.user_name AS user_name ,
+					orc.relation_id AS service_id ,
+					orc.relation_name AS service_name ,
+					orc.id AS order_id ,
+					orc.rep_count AS report_count ,
+					orc.price AS order_price ,
+					orc.order_count AS order_count ,
+					udr.build_type AS build_type ,
+					orc.back_manager_id AS doctor_id ,
+					orc.back_user_mobile AS doctor_mobile ,
+					orc.back_user_name AS doctor_name ,
+					jodr.org_id AS org_id
+				FROM
+					order_rep_count AS orc
+				INNER JOIN user_doctor_rel AS udr 
+					ON udr.manager_id = orc.user_id AND udr.build_type = 1 
+				LEFT JOIN api_contracted_user AS acu 
+					ON acu.id = udr.contracted_user_id
+				LEFT JOIN jy_org_doc_rel AS jodr 
+					ON udr.doctor_id = jodr.doctor_id
+				LEFT JOIN keywords_rel AS keyr 
+					ON orc.relation_id = keyr.relation_id AND keyr.type = 1 
+				<include refid="WHERE_OrderDuties" />
+				GROUP BY
+					orc.id 
+			</when>
+			<when test="buildType == 3" >
+				SELECT 
+					amu.`name` AS sign_user_name ,
+					orc.user_id AS user_id ,
+					orc.user_mobile AS user_mobile ,
+					orc.user_name AS user_name ,
+					orc.relation_id AS service_id ,
+					orc.relation_name AS service_name ,
+					orc.id AS order_id ,
+					orc.rep_count AS report_count ,
+					orc.price AS order_price ,
+					orc.order_count AS order_count ,
+					udr.build_type AS build_type ,
+					orc.back_manager_id AS doctor_id ,
+					orc.back_user_mobile AS doctor_mobile ,
+					orc.back_user_name AS doctor_name ,
+					jodr.org_id AS org_id
+				FROM
+					order_rep_count AS orc
+				INNER JOIN user_doctor_rel AS udr 
+					ON udr.manager_id = orc.user_id AND udr.build_type = 3
+				LEFT JOIN api_motherhood_user AS amu 
+					ON amu.id = udr.contracted_user_id
+				LEFT JOIN jy_org_doc_rel AS jodr 
+					ON udr.doctor_id = jodr.doctor_id
+				LEFT JOIN keywords_rel AS keyr 
+					ON orc.relation_id = keyr.relation_id AND keyr.type = 1 
+				<include refid="WHERE_OrderDuties" />
+				GROUP BY
+					orc.id 
+			</when>
+			<otherwise>
+				SELECT 
+					acu.`name` AS sign_user_name ,
+					orc.user_id AS user_id ,
+					orc.user_mobile AS user_mobile ,
+					orc.user_name AS user_name ,
+					orc.relation_id AS service_id ,
+					orc.relation_name AS service_name ,
+					orc.id AS order_id ,
+					orc.rep_count AS report_count ,
+					orc.price AS order_price ,
+					orc.order_count AS order_count ,
+					udr.build_type AS build_type ,
+					orc.back_manager_id AS doctor_id ,
+					orc.back_user_mobile AS doctor_mobile ,
+					orc.back_user_name AS doctor_name ,
+					jodr.org_id AS org_id
+				FROM
+					order_rep_count AS orc
+				INNER JOIN user_doctor_rel AS udr 
+					ON udr.manager_id = orc.user_id AND udr.build_type = 1 
+				LEFT JOIN api_contracted_user AS acu 
+					ON acu.id = udr.contracted_user_id
+				LEFT JOIN jy_org_doc_rel AS jodr 
+					ON udr.doctor_id = jodr.doctor_id
+				LEFT JOIN keywords_rel AS keyr 
+					ON orc.relation_id = keyr.relation_id AND keyr.type = 1 
+				<include refid="WHERE_OrderDuties" />
+				GROUP BY 
+					orc.id 
+
+				UNION
+
+				SELECT 
+					amu.`name` AS sign_user_name ,
+					orc.user_id AS user_id ,
+					orc.user_mobile AS user_mobile ,
+					orc.user_name AS user_name ,
+					orc.relation_id AS service_id ,
+					orc.relation_name AS service_name ,
+					orc.id AS order_id ,
+					orc.rep_count AS report_count ,
+					orc.price AS order_price ,
+					orc.order_count AS order_count ,
+					udr.build_type AS build_type ,
+					orc.back_manager_id AS doctor_id ,
+					orc.back_user_mobile AS doctor_mobile ,
+					orc.back_user_name AS doctor_name ,
+					jodr.org_id AS org_id
+				FROM
+					order_rep_count AS orc
+				INNER JOIN user_doctor_rel AS udr 
+					ON udr.manager_id = orc.user_id AND udr.build_type = 3
+				LEFT JOIN api_motherhood_user AS amu 
+					ON amu.id = udr.contracted_user_id
+				LEFT JOIN jy_org_doc_rel AS jodr 
+					ON udr.doctor_id = jodr.doctor_id
+				LEFT JOIN keywords_rel AS keyr 
+					ON orc.relation_id = keyr.relation_id AND keyr.type = 1 
+				<include refid="WHERE_OrderDuties" />
+				GROUP BY
+					orc.id 
+			</otherwise>
+		</choose>
+	</sql>
+	
+	<sql id="WHERE_OrderDuties" >
+		<!-- WHERE -->
+		<where>
+			<if test="doctorId != null and doctorId != '' ">
+				AND orc.back_manager_id = #{doctorId,jdbcType=VARCHAR}
+			</if>
+			<if test="orgId != null and orgId != '' ">
+				AND jodr.org_id = #{orgId,jdbcType=VARCHAR}
+			</if>
+			<if test="startCountNum != null ">
+				AND orc.rep_count &gt;= #{startCountNum,jdbcType=INTEGER}
+			</if>
+			<if test="endCountNum != null ">
+				AND orc.rep_count &lt;= #{endCountNum,jdbcType=INTEGER}
+			</if>
+			<if test="startTime != null ">
+				AND orc.create_time &gt;= #{startTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="endTime != null ">
+				AND orc.create_time &lt;= #{endTime,jdbcType=TIMESTAMP}
+			</if>
+			<if test="keyWordsType != null ">
+				AND keyr.key_type = #{keyWordsType,jdbcType=INTEGER}
+			</if>
+		</where>
+	</sql>
+
+</mapper>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semioe.dubbo.dao.SbOrderStatisticMapper">
+	
+	<resultMap id="DutiesResultMap" type="com.semioe.api.vo.SbOrderDutiesVO">
+		<!-- 订单价格   数据统计返回对象 -->
+		<result column="duties_key" jdbcType="VARCHAR" property="dutiesKey" />
+		<result column="duties_name" jdbcType="VARCHAR" property="dutiesName" />
+		<result column="duties_count" jdbcType="INTEGER" property="dutiesCount" />
+	</resultMap>
+	
+	<select id="sbKeywordsDutiesList" resultMap="DutiesResultMap" >
+		<!-- 各类型维度 履约情况   （人次） -->
+		SELECT 
+			count(sbor.user_id) AS duties_count ,
+			ke.id AS duties_key ,
+			ke.`name` AS duties_name
+		FROM 
+			keywords AS ke 
+		LEFT JOIN 
+		(
+			SELECT DISTINCT
+				udr.manager_id AS user_id ,
+				ord.keywords_id AS keywords_id 
+			FROM
+				sb_order_keywords AS ord
+			INNER JOIN 
+				user_doctor_rel AS udr ON ord.user_id = udr.manager_id 
+				AND udr.build_type = 1 
+				<!-- AND udr.build_type in (1,3) -->
+			LEFT JOIN 
+				jy_org_doc_rel AS jodr ON udr.doctor_id = jodr.doctor_id AND jodr.sign_type = 1
+			INNER JOIN 
+				backstage_user_info AS bus ON bus.manager_id = jodr.org_id AND bus.role_id='2' 
+				AND bus.town_code='110108' AND bus.type = 4 
+			WHERE
+				ord.type = 1 AND ord.pay_status = 1 AND ord.rep_count > 0
+		) AS sbor
+		 ON ke.id = sbor.keywords_id
+		WHERE
+			ke.key_type = 2
+		GROUP BY
+			ke.id 
+	</select>
+	
+	<select id="sbOrgDutiesList" resultMap="DutiesResultMap" parameterType="com.semioe.api.dto.SbOrderStatisticDTO" >
+		<!-- 机构维度 履约情况 （人  或 人次） -->
+		SELECT
+			us.manager_id AS duties_key,
+			us.`name` AS duties_name,
+			count(sbor.user_id) AS duties_count
+		FROM
+			backstage_user_info AS us 
+		LEFT JOIN 
+			(
+				SELECT DISTINCT
+					udr.manager_id AS user_id ,
+					<if test="keywordsId != null and keywordsId != '' ">
+						ord.keywords_id AS keywords_id,
+					</if>
+					bus.`name`,
+					bus.manager_id
+				FROM
+					sb_order_keywords AS ord
+				INNER JOIN 
+					user_doctor_rel AS udr ON ord.user_id = udr.manager_id 
+					AND udr.build_type = 1 
+				<!-- AND udr.build_type in (1,3) -->
+				LEFT JOIN 
+					jy_org_doc_rel AS jodr ON udr.doctor_id = jodr.doctor_id AND jodr.sign_type = 1
+				INNER JOIN backstage_user_info AS bus ON bus.manager_id = jodr.org_id
+				AND bus.role_id = '2'
+				AND bus.town_code = '110108'
+				AND bus.type = 4 
+				WHERE
+					ord.type = 1 AND ord.pay_status = 1 AND ord.rep_count > 0 
+				<if test="keywordsId != null and keywordsId != '' " >
+					 AND ord.keywords_id = #{keywordsId,jdbcType=INTEGER}
+				</if>
+		) AS sbor
+		ON us.manager_id = sbor.manager_id AND us.town_code = '110108' AND us.role_id = '2'
+		WHERE
+			us.town_code = '110108' AND us.role_id = '2'
+		GROUP BY
+			us.manager_id
+		ORDER BY
+			us.manager_id
+	</select>
+	
+	<select id="signUserCount" resultType="java.lang.Integer" >
+		<!-- 签约人数合计 （人） -->
+		SELECT
+			COUNT(udr.manager_id) 
+		FROM
+			user_doctor_rel AS udr
+		LEFT JOIN 
+			jy_org_doc_rel AS jodr ON udr.doctor_id = jodr.doctor_id AND jodr.sign_type = 1
+		LEFT JOIN backstage_user_info AS bus  ON bus.manager_id = jodr.org_id
+				AND bus.role_id = '2' AND bus.town_code = '110108' AND bus.type = 4 
+		WHERE
+			udr.build_type = 1 
+			<!-- AND udr.build_type in (1,3) -->
+			AND bus.role_id = '2' AND bus.town_code = '110108' AND bus.type = 4 
+		
+	</select>
+	
+	<select id="signOrgUserList" resultMap="DutiesResultMap" >
+		<!-- 机构维度，用户签约情况统计 （人） -->
+		SELECT 
+			bus.manager_id AS duties_key ,
+			bus.`name` AS duties_name ,
+			count(udr.manager_id) AS duties_count 
+		FROM
+			backstage_user_info AS bus 
+		LEFT JOIN 
+			jy_org_doc_rel AS jodr ON jodr.org_id = bus.manager_id AND jodr.sign_type = 1
+		LEFT JOIN
+			user_doctor_rel AS udr ON udr.doctor_id = jodr.doctor_id 
+			AND udr.build_type = 1 
+			<!-- AND udr.build_type in (1,3) -->
+		WHERE
+			bus.role_id = '2' AND bus.town_code = '110108' AND bus.type = 4 
+		GROUP BY
+			bus.manager_id 
+		ORDER BY
+			bus.manager_id
+	</select>
+	
+	<select id="dutiesUserCount" resultType="java.lang.Integer" >
+		<!-- 履约人数合计 （人）  -->
+		SELECT COUNT(sbor.user_id)
+		FROM
+		(
+			SELECT DISTINCT
+				udr.manager_id AS user_id 
+			FROM
+				sb_order_keywords AS ord
+			INNER JOIN 
+				user_doctor_rel AS udr ON ord.user_id = udr.manager_id 
+				AND udr.build_type = 1 
+				<!-- AND udr.build_type in (1,3) -->
+			LEFT JOIN 
+				jy_org_doc_rel AS jodr ON udr.doctor_id = jodr.doctor_id AND jodr.sign_type = 1
+			INNER JOIN 
+				backstage_user_info AS bus ON bus.manager_id = jodr.org_id AND bus.role_id='2' 
+				AND bus.town_code='110108' AND bus.type = 4 
+			WHERE
+				ord.type = 1 AND ord.pay_status = 1 AND ord.rep_count > 0 
+		) AS sbor 
+	</select>
+	
+</mapper>

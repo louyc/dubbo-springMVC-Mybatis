@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>共享服务</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select my-tab-select2">
+        <ul>
+            <li>
+                <label for="brandName">服务名称：</label>
+                <input type="text" class="layui-input" id="serviceName"/>
+            </li>
+            <li>
+                <label for="venderName">共享者：</label>
+                <input type="text" class="layui-input" id="shareName"/>
+            </li>
+        </ul>
+        <p>
+            <button class="layui-btn " id="search">搜索</button>
+            <button class="layui-btn " id="chooseService">选择服务</button>
+        </p>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" id="table_chooseed" style="width: auto;min-width: 100%">
+            <colgroup>
+                <col width="">
+                <col width="200">
+                <col width="">
+                <col width="150">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>服务名称</th>
+                <th>共享者</th>
+                <th>描述</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="pagging"></div>
+    <div id="add_service" style="display: none;">
+    	<div class="my-tab-select my-tab-select2">
+	        <ul>
+	            <li>
+	                <label for="name">服务名称：</label>
+	                <input type="text" class="layui-input" id="name"/>
+	            </li>
+	            <li>
+	                <label for="createName">共享者：</label>
+	                <input type="text" class="layui-input" id="createName"/>
+	            </li>
+	        </ul>
+	        <p>
+	            <button class="layui-btn " id="_search">搜索</button>
+	            <button class="layui-btn " id="_chooseService">确定</button>
+	        </p>
+	    </div>
+	    <div class="layui-form">
+	        <table class="layui-table" id="table_choose" style="width: auto;min-width: 100%">
+	            <colgroup>
+	            	<col width="50">
+	                <col width="">
+	                <col width="200">
+	                <col width="">
+	                <col>
+	            </colgroup>
+	            <thead>
+	            <tr>
+	            	<th><input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose"></th>
+	                <th>服务名称</th>
+	                <th>共享者</th>
+	                <th>描述</th>
+	            </tr>
+	            </thead>
+	            <tbody>
+	            </tbody>
+	        </table>
+	    </div>
+	    <div id="_pagging"></div>
+    </div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="../../js/tool.js" charset="utf-8"></script>
+<script src="../../js/console/recommendService.js"></script>
+</body>
+</html>

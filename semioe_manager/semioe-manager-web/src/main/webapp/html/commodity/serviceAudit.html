@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <style type="text/css">
+    	.opa0{display:inline-block;width:70px;height:40px;opacity:0;filter:alpha(opacity=0); margin-right:-70px;position:relative;z-index: 99;}
+    	.reviseStock{
+			display:inline-block;
+			width:22px;
+			height:22px;
+			background:url(../../image/editIcon.png) no-repeat center center;
+			background-size: cover;
+		    margin-left: 5px;
+		    vertical-align: top;
+		    cursor: pointer;
+		    float: right;
+		}
+		.stage{
+			font-size:0px;
+		}
+		.stage>p{
+			display:inline-block;
+			font-size: 14px;
+			vertical-align: middle;
+		}
+		.stage>p:nth-child(1){
+			max-width:80%;
+		}
+		.stage>p:nth-child(2){
+			max-width:19%;
+		}
+    </style>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <form class="layui-form">
+        <ul>
+            <li>
+                <label for="vender">服务名称：</label>
+                <input type="text" class="layui-input" id="serviceName"/>
+            </li>
+            <li>
+                <label for="brand">专家机构：</label>
+                <input type="text" class="layui-input" id="unit"/>
+            </li>
+            <li>
+                <div>
+                    <label class="layui-form-label">审核状态：</label>
+                    <!--<input type="text" class="layui-input" id="ifsj"/>-->
+                    <select name="auditStatus" id="auditStatus">
+                    	<option value="auto">请选择</option>
+                        <option value="1">待审核</option>
+                        <option value="2">已审核</option>
+                    </select>
+                </div>
+            </li>
+        </ul>
+        </form>
+        <p>
+            <button class="layui-btn " id="search">搜索</button>
+            <a class="layui-btn layui-btn-danger" href="javascript:;" id="exportBtn">导出</a>
+        </p>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%">
+            <colgroup>
+            	<col>
+            	<col width="150">
+            	<col width="220">
+            	<col width="220">
+            	<col width="">
+            	<col width="150">
+            </colgroup>
+            <thead>
+            	<tr>
+            		<th>服务名称</th>
+            		<th>创建单位</th>
+            		<th>服务描述</th>
+            		<th>标签</th>
+            		<th>审核意见</th>
+            		<th>操作</th>
+            	</tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+    <div id="suggestion" style="display: none;text-align: center;padding: 10px;">
+	    <textarea style="width: 100%;height: 200px;border: none;resize:none" id="auditMessage"></textarea>
+    </div>
+    <div id="labels" style="display: none;text-align: center;padding: 10px;">
+    	<div class="layui-form"></div>
+    </div>
+    <div id="pagging"></div>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>
+<script src="../../js/commodity/serviceAudit.js" charset="utf-8"></script>
+</body>
+</html>

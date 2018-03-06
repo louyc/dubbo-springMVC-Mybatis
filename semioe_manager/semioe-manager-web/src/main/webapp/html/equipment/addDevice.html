@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+    <style type="text/css">
+    	.opa0{display:inline-block;width:70px;height:40px;opacity:0;filter:alpha(opacity=0); margin-right:-70px;position:relative;z-index: 99;}
+    	.buttonFlow{width:calc(100% - 90px);float:left;margin-right:10px;}
+    </style>
+</head>
+<body>
+<form class="layui-form" action="" id="form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">设备名称  <span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" name="title" placeholder="请输入设备名称" autocomplete="off" class="layui-input" id="brandName" maxlength="20">
+        </div>
+    </div>
+    <div class="layui-form-item">
+       <label class="layui-form-label">联网类型  <span>*</span></label>
+       <div class="layui-input-block">
+            <select name="networkingType" id="networkingType"  lay-filter="networkingType">
+            	<option value="0">无</option>
+                <option value="1">蓝牙</option>
+                <option value="2">wifi</option>
+            </select>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">机器号 <span>*</span></label>
+        <div class="layui-input-block" id="machine_code">
+            <input type="text" name="title" placeholder="请输入设备编码" autocomplete="off" class="layui-input" id="deviceCode" maxlength="60">
+        </div>
+        <div class="layui-input-block" id="build_machine_code" style="display: none;">
+            <input type="text" autocomplete="off" disabled class="layui-input machine_code buttonFlow" id="deviceCode_build">     
+            <input type="hidden" id="devicePicUrl">  
+        	<button class="layui-btn" id='buildCode'>生成</button>
+        </div>
+    </div>
+     <div class="layui-form-item">
+        <label class="layui-form-label">设备规格  <span>*</span></label>
+        <div class="layui-input-block">
+            <input type="text" name="title" placeholder="请输入设备规格" autocomplete="off" class="layui-input" id="standard">
+        </div>
+     </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">厂商  <span>*</span></label>
+        <div class="layui-input-block">
+            <select name="facturerList" id="facturerList" lay-filter="facturerList">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">品牌  <span>*</span></label>
+        <div class="layui-input-block">
+            <select name="brand" id="brand"  lay-filter="brand">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设备定义 <span>*</span></label>
+        <div class="layui-input-block">
+            <select name="deviceClass" id="deviceClass" lay-filter="deviceClass">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设备类别 <span>*</span></label>
+        <div class="layui-input-block">
+            <select name="deviceType" id="deviceType" lay-filter="deviceType">
+                <option value=""></option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">设备库存 <span>*</span></label>
+        <div class="layui-input-inline">
+            <input type="number" placeholder="请输入设备库存" autocomplete="off" class="layui-input stock"/>
+        </div>
+        <label class="layui-form-label">设备租金  <span>*</span></label>
+        <div class="layui-input-inline">
+            <input type="number" placeholder="请输入设备租金" autocomplete="off" class="layui-input deviceRent"/>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">设备投放: </label>
+        <div class="layui-input-block">
+            <input type="text" placeholder="请输入设备投放" autocomplete="off" class="layui-input delivery_throw buttonFlow">         
+        	<button class="layui-btn" id='resets'>重置</button>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">设备描述：</label>
+        <div class="layui-input-block">
+            <textarea name="desc" placeholder="请输入设备描述" class="layui-textarea brandDes" maxlength="60"></textarea>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否上架 <span>*</span></label>
+        <div class="layui-input-block">
+            <input type="radio" name="frame" value="T" title="上架">
+            <input type="radio" name="frame" value="F" title="下架" checked>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否租赁 <span>*</span></label>
+        <div class="layui-input-block">
+            <input type="radio" name="rent" value="T" title="是">
+            <input type="radio" name="rent" value="F" title="否" checked>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+        </div>
+    </div>
+</form>
+ <div id='goods-info-box' class='info-box' style="display:none;margin:10px 15px">
+    	<div>
+    		<p><label style='float:left;padding:3px 3px'>手机</label><input name='phone' type="text"  id='phone' class="layui-input"  style='width:200px;height:30px;float:left;margin-right:20px;'></p>
+    		<p><label style='float:left;padding:3px 3px'>名字</label><input name='name' type="text" id='name'   class="layui-input"  style='width:200px;height:30px;float:left;margin-right:20px;'></p>
+    		<button class="layui-btn" id="findMore" style='height:30px;line-height:30px;font-size:14px;'>搜索</button>
+    	</div>
+        <table class="layui-table explicit">
+            <colgroup>
+                <col width="300">
+                <col width="300">
+                <col width="300">
+                <col>
+            </colgroup>
+            <thead>
+	            <tr>
+	                <th>手机</th>
+	                <th>名字</th>
+	                <th>投放地址</th>
+	            </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+        <div id="tableBox" style="text-align:center;"></div> 
+</div> 
+<div id="suggestion" style="display: none;text-align: center;padding: 10px;">
+	<form class="layui-form">
+	    <div class="layui-form-item">
+	        <label class="layui-form-label">产品id  <span>*</span></label>
+	        <div class="layui-input-block">
+	            <input type="text" name="productId" placeholder="请输入产品id" autocomplete="off" class="layui-input" id="productId" maxlength="20">
+	        </div>
+	    </div>
+	    <div class="layui-form-item">
+	        <label class="layui-form-label">mac地址  <span>*</span></label>
+	        <div class="layui-input-block">
+	            <input type="text" name="macAddress" placeholder="请输入mac地址" autocomplete="off" class="layui-input" id="macAddress" maxlength="20">
+	        </div>
+	    </div>
+    </form>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="../../js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-json.js"></script>
+<script src="../../js/tool.js"></script>
+<script src="../../js/equipment/addDevice.js"></script>
+</body>
+</html>

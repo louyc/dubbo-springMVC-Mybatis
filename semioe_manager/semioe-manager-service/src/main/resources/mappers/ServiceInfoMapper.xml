@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.semioe.dubbo.dao.ServiceInfoMapper">
+  <resultMap id="BaseResultMap" type="com.semioe.api.entity.ServiceInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="procedure_id" jdbcType="VARCHAR" property="procedureId" />
+    <result column="procedure_name" jdbcType="VARCHAR" property="procedureName" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="opinion" jdbcType="VARCHAR" property="opinion" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="in_use" jdbcType="INTEGER" property="inUse" />
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+    <result column="build_type" jdbcType="INTEGER" property="buildType" />
+    <result column="service_attribute" jdbcType="INTEGER" property="serviceAttribute" />
+    <result column="service_type" jdbcType="INTEGER" property="serviceType" />
+    <result column="service_share" jdbcType="INTEGER" property="serviceShare" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+  </resultMap>
+  <resultMap id="BaseVOResultMap" type="com.semioe.api.vo.ServiceInfoVO">
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+  </resultMap>
+   <!-- VO对象关联查询服务 -->
+  <resultMap id="VoResultMap" type="com.semioe.api.vo.ServiceInfoVO">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="procedure_id" jdbcType="VARCHAR" property="procedureId" />
+    <result column="procedure_name" jdbcType="VARCHAR" property="procedureName" />
+     <result column="description" jdbcType="LONGVARCHAR" property="description" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="opinion" jdbcType="VARCHAR" property="opinion" />
+    <result column="create_name" jdbcType="VARCHAR" property="createName" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="in_use" jdbcType="INTEGER" property="inUse" />
+    <result column="build_type" jdbcType="INTEGER" property="buildType" />
+    <result column="keywords_ids" jdbcType="VARCHAR" property="keywordsIdList" />
+    <result column="keywords_names" jdbcType="VARCHAR" property="keywordsName" />
+    <result column="service_attribute" jdbcType="INTEGER" property="serviceAttribute" />
+    <result column="service_type" jdbcType="INTEGER" property="serviceType" />
+    <result column="service_share" jdbcType="INTEGER" property="serviceShare" />
+    <result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+  </resultMap>
+  
+  <!-- VO关联插叙结果 -->
+  <sql id="VORel_ServiceInfo_Column" >
+  	ser.id ,ser.name, ser.price, ser.procedure_id,ser.procedure_name, ser.status, ser.opinion, 
+  	ser.create_user_id, ser.create_time, ser.update_time, ser.in_use ,ser.description,
+  	ser.service_attribute,ser.service_type,ser.service_share, 
+  	( CASE WHEN ser.img_url IS NULL THEN '/upFile/default_goods_icon.png' ELSE ser.img_url END ) AS img_url
+  </sql>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.semioe.api.entity.ServiceInfo">
+    <result column="description" jdbcType="LONGVARCHAR" property="description" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    id, name, price, procedure_id, status, opinion, create_user_id, create_time, update_time, 
+    in_use,build_type,service_attribute,service_type,service_share,img_url
+  </sql>
+  <sql id="Blob_Column_List">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    description
+  </sql>
+  <select id="selectByExampleWithBLOBs" parameterType="com.semioe.api.entity.ServiceInfoExample" resultMap="ResultMapWithBLOBs">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from service_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByConditionListPage" parameterType="com.semioe.api.vo.ServiceInfoVO" 
+  resultType="com.semioe.api.vo.ServiceInfoVO">
+    select 
+     s.id, s.name, s.price, s.procedure_id as procedureId, s.procedure_name 
+     as procedureName,s.status, s.opinion, 
+     s.create_user_id as createUserId, s.create_time as createTime, s.description,
+     s.update_time as updateTime, s.in_use as inUse,
+     u.name as createName ,s.build_type as buildType
+     ,s.service_attribute as serviceAttribute,s.service_type as serviceType,
+     s.img_url as imgUrl,s.service_share as serviceShare
+    from service_info s left JOIN backstage_user_info u on s.create_user_id = u.manager_id 
+    where s.in_use = 1 and s.build_type ='1'
+    <if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+      </if>
+    <if test="createUserId != null and createUserId !=''">
+        and s.create_user_id = #{createUserId,jdbcType=VARCHAR}
+      </if>
+       <if test="statusList != null">
+        and s.status in
+                <foreach item="item" index="index" collection="statusList" 
+                         open="(" separator="," close=")">
+                        ${item}
+                </foreach>
+      </if>
+      <if test="createName!=null and createName!=''">
+        and u.name like #{createName,jdbcType=VARCHAR}
+      </if>
+      <if test="serviceShare != null and serviceShare>0">
+        and s.service_share= #{serviceShare,jdbcType=INTEGER}
+      </if>
+      <if test="serviceType != null and serviceType>0">
+        and s.service_type= #{serviceType,jdbcType=INTEGER}
+      </if>
+      <if test="serviceAttribute != null and serviceAttribute>0">
+        and s.service_attribute = #{serviceAttribute,jdbcType=INTEGER}
+      </if>
+      	order by s.create_time desc
+  </select>
+  
+  <select id="selectById" parameterType="com.semioe.api.vo.ServiceInfoVO" resultType="java.util.Map">
+    select 
+     s.id, s.name, s.price, s.procedure_id as procedureId, s.status, s.opinion, s.procedure_name 
+     as procedureName,
+     s.create_user_id as createUserId, s.create_time as createTime, s.description,
+     s.update_time as updateTime, s.in_use as inUse,u.name as createName
+     ,s.service_attribute as serviceAttribute,s.service_type as serviceType,
+     s.img_url as imgUrl,s.service_share as serviceShare
+    from service_info s left JOIN backstage_user_info u on s.create_user_id = u.manager_id 
+    where s.in_use = 1
+      <if test="id != null">
+        and s.id = #{id,jdbcType=INTEGER}
+      </if>
+ 	order by s.create_time desc
+  </select>
+  <select id="selectByExample" parameterType="com.semioe.api.entity.ServiceInfoExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from service_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+       id, name, price, procedure_id, status, opinion,
+        create_user_id, create_time, update_time, description,
+    	in_use,s.service_attribute ,s.service_type,
+     s.img_url,s.service_share
+    from service_info s
+    where id = #{id,jdbcType=INTEGER} and in_use=1
+  </select>
+  <select id="selectServiceByName" parameterType="com.semioe.api.vo.ServiceInfoVO" resultMap="ResultMapWithBLOBs">
+    select 
+       id, name, price, procedure_id, status, opinion, create_user_id, create_time, update_time, description,
+    in_use,s.service_attribute ,s.service_type, s.img_url,s.service_share
+    from service_info s
+    where in_use=1
+    <if test="name != null and name !=''">
+       and name = #{name,jdbcType=VARCHAR}
+     </if>  
+     <if test="createUserId != null and createUserId !=''">
+      	and create_user_id = #{createUserId,jdbcType=VARCHAR}
+     </if>
+     <if test="id != null and id>0">
+      	and id != #{id,jdbcType=INTEGER}
+     </if>
+  </select>
+  <select id="selectByUserIdAndStatus" parameterType="com.semioe.api.vo.ServiceInfoVO" resultMap="ResultMapWithBLOBs">
+    select 
+       id, name, price, procedure_id, status, opinion, create_user_id, create_time, update_time, description,
+    in_use,s.service_attribute ,s.service_type, s.img_url,s.service_share
+    from service_info s
+    where in_use=1
+    <if test="status != null">
+       and status = #{status,jdbcType=INTEGER}
+     </if>  
+     <if test="createUserId != null and createUserId!=''">
+      	and create_user_id = #{createUserId,jdbcType=VARCHAR}
+     </if>
+  </select>
+  <select id="selectVOByPrimaryKey" parameterType="java.lang.Integer" resultMap="VoResultMap" >
+ 	 SELECT DISTINCT 
+		<include refid="VORel_ServiceInfo_Column" /> 
+	  , us.manager_id AS create_user_id , us.`name` AS create_name 
+	FROM service_info  AS ser left join backstage_user_info us ON ser.create_user_id = us.manager_id
+    where ser.id = #{id,jdbcType=INTEGER} and ser.in_use=1
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from service_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.semioe.api.entity.ServiceInfoExample">
+    delete from service_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.semioe.api.entity.ServiceInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into service_info (name, price, procedure_id, procedure_name,
+      status, opinion, create_user_id, 
+      create_time, update_time, in_use,description,service_attribute,
+      service_type,service_share,img_url)
+    values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{procedureId,jdbcType=VARCHAR}, 
+      #{procedureName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{opinion,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{inUse,jdbcType=INTEGER},
+      #{description,jdbcType=LONGVARCHAR},
+      #{serviceAttribute,jdbcType=INTEGER}, #{serviceType,jdbcType=INTEGER},
+      #{serviceShare,jdbcType=INTEGER}, #{imgUrl,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.semioe.api.entity.ServiceInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into service_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="procedureId != null">
+        procedure_id,
+      </if>
+      <if test="procedureName != null">
+        procedure_name,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="opinion != null">
+        opinion,
+      </if>
+      <if test="createUserId != null">
+        create_user_id,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="inUse != null">
+        in_use,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="serviceAttribute != null">
+        service_attribute,
+      </if>
+      <if test="serviceType != null">
+        service_type,
+      </if>
+      <if test="serviceShare != null">
+        service_share,
+      </if>
+      <if test="imgUrl != null">
+        img_url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="procedureId != null">
+        #{procedureId,jdbcType=VARCHAR},
+      </if>
+      <if test="procedureName != null">
+        #{procedureName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null">
+        #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inUse != null">
+        #{inUse,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="serviceAttribute != null">
+        #{serviceAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="serviceType != null">
+         #{serviceType,jdbcType=INTEGER},
+      </if>
+      <if test="serviceShare != null">
+         #{serviceShare,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null">
+         #{imgUrl,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.semioe.api.entity.ServiceInfoExample" resultType="java.lang.Long">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    select count(*) from service_info
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    update service_info s
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.name != null">
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.procedureId != null">
+        procedure_id = #{record.procedureId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.procedureName != null">
+        procedure_name= #{record.procedureName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=INTEGER},
+      </if>
+      <if test="record.opinion != null">
+        opinion = #{record.opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUserId != null">
+        create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null">
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.inUse != null">
+        in_use = #{record.inUse,jdbcType=INTEGER},
+      </if>
+      <if test="record.description!= null">
+        s.description = #{record.description,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  
+   <update id="updateStatus" parameterType="java.util.Map" >
+    update service_info
+    set 
+      <if test="status != null">
+      	status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null">
+     	 opinion = #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceShare != null">
+     	 service_share = #{serviceShare,jdbcType=VARCHAR},
+      </if>
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+      where 
+      id = #{id,jdbcType=INTEGER}
+  </update>
+   <update id="updateInUse" parameterType="map" >
+    update service_info
+    set 
+		in_use = #{inUse,jdbcType=INTEGER},
+		update_time =#{updateTime,jdbcType=TIMESTAMP}
+      where 
+      id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+  <update id="updateByExampleWithBLOBs" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    update service_info
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      procedure_id = #{record.procedureId,jdbcType=VARCHAR},
+      procedure_name = #{record.procedureName,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      opinion = #{record.opinion,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      in_use = #{record.inUse,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=LONGVARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    update service_info
+    set id = #{record.id,jdbcType=INTEGER},
+      name = #{record.name,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      procedure_id = #{record.procedureId,jdbcType=VARCHAR},
+      procedure_name = #{record.procedureName,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=INTEGER},
+      opinion = #{record.opinion,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      in_use = #{record.inUse,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=INTEGER}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.semioe.api.vo.ServiceInfoVO">
+    update service_info
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="procedureId != null">
+        procedure_id = #{procedureId,jdbcType=VARCHAR},
+      </if>
+      <if test="procedureName != null">
+        procedure_name = #{procedureName,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="opinion != null">
+        opinion = #{opinion,jdbcType=VARCHAR},
+      </if>
+      <if test="createUserId != null">
+        create_user_id = #{createUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inUse != null">
+        in_use = #{inUse,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="serviceAttribute != null">
+        service_attribute = #{serviceAttribute,jdbcType=INTEGER},
+      </if>
+      <if test="serviceType != null">
+        service_type = #{serviceType,jdbcType=INTEGER},
+      </if>
+      <if test="serviceShare != null">
+        service_share = #{serviceType,jdbcType=INTEGER},
+      </if>
+      <if test="imgUrl != null">
+        img_url = #{imgUrl,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.semioe.api.entity.ServiceInfo">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    update service_info s
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      procedure_id = #{procedureId,jdbcType=VARCHAR},
+      procedure_name = #{procedureName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      opinion = #{opinion,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      in_use = #{inUse,jdbcType=INTEGER},
+      s.description = #{description,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.semioe.api.entity.ServiceInfo">
+    <!--
+      WARNING - @mbg.generated
+      This element is automatically generated by MyBatis Generator, do not modify.
+    -->
+    update service_info
+    set name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      procedure_id = #{procedureId,jdbcType=VARCHAR},
+      procedure_name = #{procedureName,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      opinion = #{opinion,jdbcType=VARCHAR},
+      create_user_id = #{createUserId,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      in_use = #{inUse,jdbcType=INTEGER},
+      description = #{description,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+   <select id="selectServiceAndUserById" parameterType="java.lang.Integer" resultMap="BaseVOResultMap">
+     select u.manager_id as create_user_id,u.name as create_name
+     from service_info s left join backstage_user_info u on s.create_user_id = u.manager_id
+     where s.id = #{serviceId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getServiceInfoVoByKeywords" parameterType="com.semioe.api.vo.ServiceInfoVO" resultMap="VoResultMap" >
+	SELECT DISTINCT 
+		<include refid="VORel_ServiceInfo_Column" /> 
+	  , us.manager_id AS create_user_id , us.`name` AS create_name 
+	FROM service_info AS ser 
+	LEFT JOIN backstage_user_info AS us ON ser.create_user_id = us.manager_id
+	<if test="( keywordsIdList != null and keywordsIdList != '' ) or 
+				(keywordsName != null and keywordsName != '') or 
+					(keywordsNameList != null and keywordsNameList.size() > 0)" >
+		LEFT JOIN keywords_rel AS ker ON ser.id = ker.relation_id
+		LEFT JOIN keywords AS ke ON ker.keywords_id = ke.id
+	</if>
+	WHERE 
+		<include refid="KeyWords_Where_Column" />
+	<if test="currentResult != null and currentResult >= 0 and showCount != null and showCount > 0 ">
+    	limit #{currentResult,jdbcType=INTEGER},#{showCount,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  <select id="countServiceInfoVoByKeywords" parameterType="com.semioe.api.vo.ServiceInfoVO" resultType="java.lang.Long" >
+	SELECT 
+		COUNT( DISTINCT ser.id )
+	FROM service_info AS ser 
+	LEFT JOIN backstage_user_info AS us ON ser.create_user_id = us.manager_id
+	<if test="( keywordsIdList != null and keywordsIdList != '' ) or 
+				(keywordsName != null and keywordsName != '') or 
+					(keywordsNameList != null and keywordsNameList.size() > 0)" >
+		LEFT JOIN keywords_rel AS ker ON ser.id = ker.relation_id
+		LEFT JOIN keywords AS ke ON ker.keywords_id = ke.id
+	</if>
+	WHERE 
+		<include refid="KeyWords_Where_Column" />
+  </select>
+  
+  <sql id="KeyWords_Where_Column" >
+  	ser.status = 2 AND ser.in_use = 1 
+  	
+  	<if test="name != null and name != ''">
+        AND ser.name like CONCAT(#{name,jdbcType=VARCHAR},'%')
+    </if>
+  	
+  	<if test="( keywordsIdList != null and keywordsIdList != '' ) or 
+				(keywordsName != null and keywordsName != '') or 
+					(keywordsNameList != null and keywordsNameList.size() > 0)" >
+		AND ker.type = 1
+	</if>
+  	<if test="id != null and id != ''">
+  		AND ser.id = #{id,jdbcType=INTEGER}
+  	</if>
+  	<if test="idList != null and idList.size() > 0">
+    	AND ser.id IN
+    	<foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+    		${item}
+    	</foreach>
+    </if>
+  	<if test="keywordsIdList != null and keywordsIdList != ''" >
+		AND ke.id = #{keywordsIdList,jdbcType=VARCHAR}
+	</if>
+	<if test="keywordsName != null and keywordsName != ''" >
+		AND ke.`name` = #{keywordsName,jdbcType=VARCHAR}
+	</if>
+	<if test="keywordsNameList != null and keywordsNameList.size() > 0"  >
+		AND ke.`name` in 
+		<foreach item="item" index="index" collection="keywordsNameList" open="(" separator="," close=")">
+	    	#{item}
+	    </foreach>
+	</if>
+  </sql>
+  
+  <!-- 家医20170922 -->
+  <select id="selectJyByConditionListPage" parameterType="com.semioe.api.vo.ServiceInfoVO" resultType="java.util.Map">
+    select 
+     s.id, s.name, s.price, s.procedure_id as procedureId, s.procedure_name 
+     as procedureName,s.status, s.opinion, 
+     s.create_user_id as createUserId, s.create_time as createTime, s.description,
+     s.update_time as updateTime, s.in_use as inUse,u.name as createName,s.build_type as buildType
+    from service_info s left JOIN backstage_user_info u on s.create_user_id = u.manager_id 
+    where s.in_use = 1 and s.build_type ='2'
+    <if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+      </if>
+    <if test="createUserId != null and createUserId !=''">
+        and s.create_user_id = #{createUserId,jdbcType=VARCHAR}
+      </if>
+       <if test="statusList != null">
+        and s.status in
+                <foreach item="item" index="index" collection="statusList" 
+                         open="(" separator="," close=")">
+                        ${item}
+                </foreach>
+      </if>
+      <if test="createName!=null and createName !=''">
+       and u.name like #{createName,jdbcType=VARCHAR}
+      </if>
+      order by s.create_time desc
+  </select>
+  <select id="selectJyConditionList" parameterType="com.semioe.api.vo.ServiceInfoVO" resultType="java.util.Map">
+    select 
+     s.id, s.name, s.price, s.procedure_id as procedureId, s.status, s.opinion,s.procedure_name 
+     as procedureName, 
+     s.create_user_id as createUserId, s.create_time as createTime, s.description,
+     s.update_time as updateTime, s.in_use as inUse,u.name as createName ,s.build_type as buildType
+    from service_info s left JOIN backstage_user_info u on s.create_user_id = u.manager_id 
+    where s.in_use = 1 and s.build_type ='2'
+      <if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+      </if>
+       <if test="createUserId != null and createUserId !=''">
+        and s.create_user_id =#{createUserId,jdbcType=VARCHAR}
+      </if>
+     <if test="statusList != null">
+        and s.status in
+                <foreach item="item" index="index" collection="statusList" 
+                         open="(" separator="," close=")">
+                        ${item}
+                </foreach>
+      </if>
+      <if test="createName!=null and createName !=''">
+       and u.name like #{createName,jdbcType=VARCHAR}
+      </if>
+      order by s.create_time desc
+  </select>
+  
+  <insert id="insertJy" useGeneratedKeys="true" keyProperty="id" parameterType="com.semioe.api.entity.ServiceInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into service_info (name, price, procedure_id, procedure_name,
+      status, opinion, create_user_id, 
+      create_time, update_time, in_use,description,build_type)
+    values (#{name,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, #{procedureId,jdbcType=VARCHAR}, 
+      #{procedureName,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{opinion,jdbcType=VARCHAR}, #{createUserId,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{inUse,jdbcType=INTEGER},
+       #{description,jdbcType=LONGVARCHAR},#{buildType,jdbcType=INTEGER})
+  </insert>
+  
+  <!--根据流程id  查询服务   1024-->
+  <sql id="Entity_Where_Clause">
+  	<if test="status != null and status !=''">
+       and status = #{status,jdbcType=INTEGER}
+     </if>  
+     <if test="createUserId != null and createUserId !=''">
+      	and create_user_id = #{createUserId,jdbcType=VARCHAR}
+     </if>
+    <if test="procedureId != null and procedureId!=''" >
+    	AND procedure_id = #{procedureId,jdbcType=VARCHAR}
+    </if>
+  </sql>
+  <select id="selectByParameter" parameterType="com.semioe.api.vo.ServiceInfoVO" resultMap="BaseResultMap">
+    select 
+       id, name, price, procedure_id, status, opinion, create_user_id, create_time, update_time, description,
+    in_use
+    from service_info s
+    where  in_use = 1
+    <include refid="Entity_Where_Clause" />
+  </select>
+  
+  <!-- 20171031 -->
+  <select id="selectAllListPage" parameterType="com.semioe.api.vo.ServiceInfoVO" 
+  resultType="com.semioe.api.vo.ServiceInfoVO">
+    select d.* from (
+    SELECT 
+     s.id, s.name, s.price, s.procedure_id AS procedureId, s.procedure_name 
+     AS procedureName,s.status, s.opinion, 
+     s.create_user_id AS createUserId, s.create_time AS createTime, s.description,
+     s.update_time AS updateTime, s.in_use AS inUse,
+     u.name AS createName ,s.build_type AS buildType
+     ,s.service_attribute AS serviceAttribute,s.service_type AS serviceType,
+     s.img_url AS imgUrl,s.service_share AS serviceShare
+	FROM service_info s LEFT JOIN backstage_user_info u ON s.create_user_id = u.manager_id 
+	WHERE s.in_use = 1 AND s.build_type ='1' 
+	<if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="createUserId != null and createUserId !=''">
+        and s.create_user_id = #{createUserId,jdbcType=VARCHAR}
+    </if>
+	UNION
+	SELECT 
+	     s.id, s.name, s.price, s.procedure_id AS procedureId, s.procedure_name 
+	     AS procedureName,s.status, s.opinion, 
+	     s.create_user_id AS createUserId, s.create_time AS createTime, s.description,
+	     s.update_time AS updateTime, s.in_use AS inUse,
+	     u.name AS createName ,s.build_type AS buildType
+	     ,s.service_attribute AS serviceAttribute,s.service_type AS serviceType,
+	     s.img_url AS imgUrl,s.service_share AS serviceShare
+	FROM service_info s 
+	LEFT JOIN backstage_user_info u ON s.create_user_id = u.manager_id 
+	LEFT JOIN jy_org_doc_rel j ON j.org_id = s.`create_user_id`
+	WHERE s.in_use = 1 AND s.build_type ='1'
+	<if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="createUserId != null and createUserId !=''">
+        and j.doctor_id = #{createUserId,jdbcType=VARCHAR}
+    </if>
+	UNION
+	SELECT s.id, s.name, s.price, 
+	s.procedure_id AS procedureId, 
+	s.procedure_name AS procedureName,s.status, s.opinion, 
+	     s.create_user_id AS createUserId, 
+	     s.create_time AS createTime, 
+	     s.description,
+	     s.update_time AS updateTime, 
+	     s.in_use AS inUse,
+	     u.name AS createName ,
+	     s.build_type AS buildType,
+	     s.service_attribute AS serviceAttribute,
+	     s.service_type AS serviceType,
+	     s.img_url AS imgUrl,
+	     s.service_share AS serviceShare FROM (
+			SELECT * FROM user_share_service WHERE org_id IN(
+				SELECT org_id FROM jy_org_doc_rel r WHERE 
+				1=1
+			<if test="createUserId != null and createUserId !=''">
+	        	and r.`doctor_id` = #{createUserId,jdbcType=VARCHAR}
+	    	</if>
+			)
+		)d 
+		LEFT JOIN service_info s ON d.`service_id` = s.`id`
+		LEFT JOIN backstage_user_info u ON d.`share_id` = u.`manager_id`
+		WHERE d.`in_use`=1 AND s.build_type ='1'
+		<if test="name != null and name !=''">
+	        and s.name like #{name,jdbcType=VARCHAR}
+	    </if>
+	    )d  order by d.createTime desc
+    
+  </select>
+  <select id="selectAllList" parameterType="com.semioe.api.vo.ServiceInfoVO" 
+  resultType="com.semioe.api.vo.ServiceInfoVO">
+    select d.* from (
+    SELECT 
+     s.id, s.name, s.price, s.procedure_id AS procedureId, s.procedure_name 
+     AS procedureName,s.status, s.opinion, 
+     s.create_user_id AS createUserId, s.create_time AS createTime, s.description,
+     s.update_time AS updateTime, s.in_use AS inUse,
+     u.name AS createName ,s.build_type AS buildType
+     ,s.service_attribute AS serviceAttribute,s.service_type AS serviceType,
+     s.img_url AS imgUrl,s.service_share AS serviceShare
+	FROM service_info s LEFT JOIN backstage_user_info u ON s.create_user_id = u.manager_id 
+	WHERE s.in_use = 1 AND s.build_type ='1' 
+	<if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="createUserId != null and createUserId !=''">
+        and s.create_user_id = #{createUserId,jdbcType=VARCHAR}
+    </if>
+	UNION
+	SELECT 
+	     s.id, s.name, s.price, s.procedure_id AS procedureId, s.procedure_name 
+	     AS procedureName,s.status, s.opinion, 
+	     s.create_user_id AS createUserId, s.create_time AS createTime, s.description,
+	     s.update_time AS updateTime, s.in_use AS inUse,
+	     u.name AS createName ,s.build_type AS buildType
+	     ,s.service_attribute AS serviceAttribute,s.service_type AS serviceType,
+	     s.img_url AS imgUrl,s.service_share AS serviceShare
+	FROM service_info s 
+	LEFT JOIN backstage_user_info u ON s.create_user_id = u.manager_id 
+	LEFT JOIN jy_org_doc_rel j ON j.org_id = s.`create_user_id`
+	WHERE s.in_use = 1 AND s.build_type ='1'
+	<if test="name != null and name !=''">
+        and s.name like #{name,jdbcType=VARCHAR}
+    </if>
+    <if test="createUserId != null and createUserId !=''">
+        and j.doctor_id = #{createUserId,jdbcType=VARCHAR}
+    </if>
+	UNION
+	SELECT s.id, s.name, s.price, 
+	s.procedure_id AS procedureId, 
+	s.procedure_name AS procedureName,s.status, s.opinion, 
+	     s.create_user_id AS createUserId, 
+	     s.create_time AS createTime, 
+	     s.description,
+	     s.update_time AS updateTime, 
+	     s.in_use AS inUse,
+	     u.name AS createName ,
+	     s.build_type AS buildType,
+	     s.service_attribute AS serviceAttribute,
+	     s.service_type AS serviceType,
+	     s.img_url AS imgUrl,
+	     s.service_share AS serviceShare FROM (
+			SELECT * FROM user_share_service WHERE org_id IN(
+				SELECT org_id FROM jy_org_doc_rel r WHERE 
+				1=1
+			<if test="createUserId != null and createUserId !=''">
+	        	and r.`doctor_id` = #{createUserId,jdbcType=VARCHAR}
+	    	</if>
+			)
+		)d 
+		LEFT JOIN service_info s ON d.`service_id` = s.`id`
+		LEFT JOIN backstage_user_info u ON d.`share_id` = u.`manager_id`
+		WHERE d.`in_use`=1 AND s.build_type ='1'
+		<if test="name != null and name !=''">
+	        and s.name like #{name,jdbcType=VARCHAR}
+	    </if>
+	    )d  order by d.createTime desc
+  </select>
+</mapper>

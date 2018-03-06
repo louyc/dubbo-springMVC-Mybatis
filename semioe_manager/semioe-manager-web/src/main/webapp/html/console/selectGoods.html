@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>后台管理系统</title>
+    <link rel="icon" href="../../favicon.ico" type="image/x-icon" />
+ 	<link rel="shortcut icon" href="../../favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="../../layui/css/layui.css"/>
+</head>
+<body>
+<div class="layui-main" style="width: auto">
+    <div class="my-tab-select">
+        <form class="layui-form">
+        <ul>
+            <li>
+                <label for="vender">商品名称：</label>
+                <input type="text" class="layui-input" id="goodsName"/>
+            </li>
+            <li>
+                <button class="layui-btn " id="search">搜索</button>
+            </li>
+        </ul>
+        </form>
+    </div>
+    <div class="layui-form">
+        <table class="layui-table" style="width: auto;min-width: 100%">
+            <colgroup>
+	            <col width="50">
+	            <col width="">
+	            <col width="100">
+	            <col width="15%">
+            </colgroup>
+            <thead>
+            	<tr>
+            		<th><input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose"></th>
+            		<th>商品名称</th>
+            		<th>商品价格</th>
+            		<th>商品图片</th>
+            	</tr>
+            </thead>
+            <tbody>
+	            <tr>
+		            <td colspan="3" align="center">暂无数据</td>
+		        </tr>
+            </tbody>
+        </table>
+        <div id="pagging"></div>
+    </div>
+    <div id="suggestion" style="display: none;text-align: center;padding: 10px;">
+	    <textarea style="width: 100%;height: 200px;border: none;resize:none" id="auditMessage"></textarea>
+    </div>
+    <input type="hidden" id="goodId" value=""/>
+    <input type="hidden" id="goodName" value=""/>
+    <input type="hidden" id="goodImgUrl" value=""/>
+</div>
+<script src="../../layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery-2.1.1.min.js"></script>
+<script src="/js/jquery-json.js"></script>	
+<script type="text/javascript">
+$(document).ready(function(){
+	var goods_id = $("#goods_id",parent.document).val();
+	var goods = new Object();
+	if($("#goodId").val()){
+		goods.id = new Array($("#goodId").val());
+	}else{
+		goods.id =new Array();
+	}
+	if($("#goodImgUrl").val()){
+		goods.imgUrl = new Array($("#goodImgUrl").val());
+	}else{
+		goods.imgUrl =new Array();
+	}
+	if($("#goodName").val()){
+		goods.name = new Array($("#goodName").val());
+	}else{
+		goods.name =new Array();
+	}
+	layui.use(['element', 'form', 'layer', 'jquery','laypage'], function() {
+		var $ = layui.jquery,form = layui.form(),element = layui.element();
+		var layer = layui.layer,laypage = layui.laypage;
+		//将商品id name 图片url存入隐藏域
+		function setGoods(goods){
+			$("#goodId").val(goods.id.join());
+			$("#goodName").val(goods.name.join());
+			$("#goodImgUrl").val(goods.imgUrl.join());
+		}
+		//判断是否已选择
+		function ifselected(str){
+			var ifTrue = false;
+			if(goods_id.length>0){
+				var arr = new Array();
+				arr = goods_id.split(",");
+				for(var i=0;i<arr.length;i++){
+					if(str == arr[i]){
+						ifTrue = true;
+						break;
+					}
+				}
+			}
+			return ifTrue;
+		}
+		//数组新增与删除
+		Array.prototype.indexOf = function(val) {
+			for (var i = 0; i < this.length; i++) {
+				if (this[i] == val) return i;
+			}
+			return -1;
+		};
+		Array.prototype.remove = function(val) {
+			var index = this.indexOf(val);
+			if (index > -1) {
+				this.splice(index, 1);
+			}
+		};
+		//全选
+		form.on('checkbox(allChoose)', function(data){
+		    var child = $(data.elem).parents('table').find('tbody input[type="checkbox"]');
+		    child.each(function(index, item){
+		        item.checked = data.elem.checked;
+		        if(item.checked){
+		    	    goods.id.push(item.id);
+		    	    goods.imgUrl.push(item.name);
+		    	    goods.name.push(item.className);
+		        }else{
+		        	goods.id.remove(item.id);
+		        	goods.imgUrl.remove(item.name);
+		        	goods.name.remove(item.className);
+		        }
+		    });
+		    form.render('checkbox');
+		    setGoods(goods);
+	    });
+		var pageSize = 10,pageNum=1,pageSum=1;var html = '';
+		function getGoodsList(pageNum,pageSize){
+	    	var dataObj = new Object();
+	    	dataObj.showCount = pageSize;
+	    	dataObj.currentPage = pageNum;
+	    	dataObj.type = 1;//上架商品
+	    	dataObj.goodsCountGt = 0;//库存大于0
+	    	dataObj.goodsName = $.trim($('#goodsName').val());
+	        	
+	        $.ajax({
+	        	url:'/goodsInfo/getGoodsInfoArray',
+	        	type: 'POST',
+				data: $.toJSON(dataObj),
+				dataType: "json",
+				contentType: "application/json",
+	        	success:function(res){
+	        		var data = res.items;
+	        		var html = '';
+	        		if(res.successful){
+	        			pageSum = res.pagesCount;
+	        			if(data.length>0){
+	        				$.each(data,function(index,item){
+	        					if(!!goods_id&& goods_id.length>0){
+	        						if(ifselected(item.id)){
+	        							$("table thead tr th:first-child").html('<input type="checkbox" name="" lay-skin="primary" lay-filter="allChoose" checked="">')
+	        							html +='<tr><td><input type="checkbox" class="'+item.goodsName+'" name="'+item.imgUrl+'" lay-skin="primary" id="'+item.id+'" checked=""></td>';
+	        						}else{
+	        							html +='<tr><td><input type="checkbox" class="'+item.goodsName+'" name="'+item.imgUrl+'" lay-skin="primary" id="'+item.id+'"></td>';
+	        						}
+	        					}else{
+	        						html +='<tr><td><input type="checkbox" class="'+item.goodsName+'" name="'+item.imgUrl+'" lay-skin="primary" id="'+item.id+'"></td>';
+	        					}
+	        					html +='<td>'+item.goodsName+'</td>';
+	        					html +='<td>'+item.price+'</td>';
+	        					html +='<td><img style="max-width: 150px;max-height: 150px;" alt="图片加载失败！" src="'+item.imgUrl+'" title="'+item.goodsName+'"></td></tr>';
+			        		})
+			        		$("table tbody").html(html);
+	        				form.render('checkbox');
+	        				$("table td .layui-icon").on("click",function(){
+	        					var selectClass = $(this).parents(".layui-unselect").attr("class");
+	        					var item = $(this).parents("td").children("input")[0];
+	        					if(selectClass.indexOf("layui-form-checked")>0){//去除
+	        						goods.id.remove(item.id);
+	        			        	goods.imgUrl.remove(item.name);
+	        			        	goods.name.remove(item.className);
+	        					}else{//选中
+	        						goods.id.push(item.id);
+	        			    	    goods.imgUrl.push(item.name);
+	        			    	    goods.name.push(item.className);
+	        					}
+	        					setGoods(goods);
+	        				});
+	        			}else{
+		        			return;
+		        		}
+	        		}else{
+	        			return;
+	        		}
+	        	},
+	        	error:function(error){
+	        		layui.msg("数据获取失败！")
+	        	}
+	        })
+	    }
+		pagging();
+	    function pagging(){
+	    	var dataObj = new Object();
+	    	dataObj.showCount = 1000;
+	    	dataObj.currentPage = pageNum;
+	    	dataObj.type = 1;
+	    	dataObj.goodsCountGt = 0;
+	    	dataObj.goodsName = $.trim($('#goodsName').val());
+	        	
+	        $.ajax({
+	        	url:'/goodsInfo/getGoodsInfoArray',
+	        	type: 'POST',
+	        	async:false,
+				data: $.toJSON(dataObj),
+				dataType: "json",
+				contentType: "application/json",
+	        	success:function(res){
+	        		var data = res.items;
+	        		var str = '';
+	        		if(res.successful){
+	        			pageSum = data.length;
+	        			if(data.length>0){
+	        				laypage({
+	        	        		cont: 'pagging'
+	                			, pages: Math.ceil(pageSum/10)
+	                			, skip: false
+	                			,jump: function(obj, first){
+	                				//得到了当前页，用于向服务端请求对应数据
+	                					pageNum = obj.curr;
+	                					getGoodsList(pageNum,10);
+	                			}
+	        	        	});
+	        			}else{
+		        			return;
+		        		}
+	        		}else{
+	        			return;
+	        		}
+	        		$('.list-table tbody').html(str);
+	        	},
+	        	error:function(error){
+	        		layui.msg("数据获取失败！")
+	        	}
+	        })
+	    	
+	    }
+		$("#search").on("click",function(){
+			pagging();
+			return false;
+		})
+	});	
+})
+</script>
+</body>
+</html>

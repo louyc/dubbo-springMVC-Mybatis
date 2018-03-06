@@ -1,0 +1,13 @@
+.classpath
+.project
+.settings/
+logs/
+target/
+/*/.gitignore
+.metadata
+semioe-manager-web/src/main/webapp/file
+.DS_Store
+.idea/
+*.iml
+*.ipr
+*.iws
